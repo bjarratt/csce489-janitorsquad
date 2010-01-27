@@ -72,6 +72,7 @@ namespace _2DGame489
             previous_gamepad_state = current_gamepad_state;
 
             base.Update(theGameTime, speed, direction);     //call Sprite.Update
+            Jeep_Turret.Position = new Vector2(Position.X + 40, Position.Y + 75);
         }
 
         private void UpdateMovement(KeyboardState currentKeyState, GamePadState currentGamepadState)

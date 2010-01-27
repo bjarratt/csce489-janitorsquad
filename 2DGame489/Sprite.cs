@@ -81,7 +81,6 @@ namespace _2DGame489
         {
             theSpriteBatch.Draw(mSpriteTexture, Position, Source,
                 Color.White, rotation, origin, Scale, SpriteEffects.None, 0);
-            //(0,9) is the midpoint of the bullet image that is used for the origin of rotation
         }
     }
 }
