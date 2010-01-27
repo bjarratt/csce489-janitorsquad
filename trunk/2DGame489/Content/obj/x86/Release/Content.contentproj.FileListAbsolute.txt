@@ -1,0 +1,2 @@
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\2DGame489\2DGame489\Content\obj\x86\Release\ResolveAssemblyReference.cache
+H:\spring10\CSCE 489\2DGame489\2DGame489\Content\obj\x86\Release\ResolveAssemblyReference.cache
