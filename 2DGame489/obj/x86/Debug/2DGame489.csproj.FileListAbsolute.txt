@@ -1,0 +1,7 @@
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\2DGame489\2DGame489\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\2DGame489\2DGame489\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\2DGame489\2DGame489\bin\x86\Debug\Content\bowser.xnb
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\2DGame489\2DGame489\bin\x86\Debug\2DGame489.exe
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\2DGame489\2DGame489\bin\x86\Debug\2DGame489.pdb
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\2DGame489\2DGame489\obj\x86\Debug\2DGame489.exe
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\2DGame489\2DGame489\obj\x86\Debug\2DGame489.pdb

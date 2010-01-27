@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>bowser.jpg</Source>
+      <Name>bowser</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>H:\spring10\CSCE 489\2DGame489\2DGame489\bin\x86\Release\Content\bowser.xnb</Output>
+      <Time>2010-01-22T16:13:04-06:00</Time>
+    </Item>
+    <Item>
+      <Source>jeep-hurricane-9.jpg</Source>
+      <Name>jeep-hurricane-9</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>H:\spring10\CSCE 489\2DGame489\2DGame489\bin\x86\Release\Content\jeep-hurricane-9.xnb</Output>
+      <Time>2010-01-24T03:16:52-06:00</Time>
+    </Item>
+    <Item>
+      <Source>bullet.png</Source>
+      <Name>bullet</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>H:\spring10\CSCE 489\2DGame489\2DGame489\bin\x86\Release\Content\bullet.xnb</Output>
+      <Time>2010-01-25T16:35:16-06:00</Time>
+    </Item>
+    <Item>
+      <Source>turret1.png</Source>
+      <Name>turret1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>H:\spring10\CSCE 489\2DGame489\2DGame489\bin\x86\Release\Content\turret1.xnb</Output>
+      <Time>2010-01-26T23:32:55-06:00</Time>
+    </Item>
+    <Item>
+      <Source>turret2.png</Source>
+      <Name>turret2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>H:\spring10\CSCE 489\2DGame489\2DGame489\bin\x86\Release\Content\turret2.xnb</Output>
+      <Time>2010-01-26T23:33:07-06:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <TargetPlatform>Windows</TargetPlatform>
+      <BuildConfiguration>Release</BuildConfiguration>
+      <CompressContent>true</CompressContent>
+      <RootDirectory>H:\spring10\CSCE 489\2DGame489\2DGame489\Content\</RootDirectory>
+      <LoggerRootDirectory>H:\spring10\CSCE 489\2DGame489\2DGame489\</LoggerRootDirectory>
+      <IntermediateDirectory>H:\spring10\CSCE 489\2DGame489\2DGame489\Content\obj\x86\Release\</IntermediateDirectory>
+      <OutputDirectory>H:\spring10\CSCE 489\2DGame489\2DGame489\bin\x86\Release\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2009-05-28T01:16:14-05:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
+        <Value>2009-05-28T01:16:06-05:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2009-05-28T01:16:16-05:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2009-05-28T01:16:26-05:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2009-05-28T01:16:12-05:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
+        <Value>2009-05-28T01:16:06-05:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\WINDOWS\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\3.1.0.0__6d5c3888ef60e27d\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2010-01-19T14:52:57.7617062-06:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>
