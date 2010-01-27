@@ -29,22 +29,23 @@ namespace _2DGame489
 
         public void Update(GameTime theGameTime)
         {
-            base.Update(theGameTime, speed, direction);
+            //base.Update(theGameTime, speed, direction);
+            //Position += direction * speed * (float)theGameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public void MoveTurret(Vector2 pos, Vector2 speed, Vector2 direction, 
+        public void MoveTurret(Vector2 jeepPos, Vector2 speed, Vector2 direction, 
             GameTime theGameTime, GamePadState gamepad_state, KeyboardState key_state, MouseState mouse_state)
         {
-            if (Position.X != pos.X + 40 && Position.Y != pos.Y + 75)   //just in case turret gets lost :)
+            if (Position.X != jeepPos.X + 40 && Position.Y != jeepPos.Y + 75)   //just in case turret gets lost :)
             {
-                Position.X = pos.X + 40;
-                Position.Y = pos.Y + 75;
+                Position.X = jeepPos.X + 40;
+                Position.Y = jeepPos.Y + 75;
             }
             if (gamepad_state.ThumbSticks.Right != Vector2.Zero)
-                RotateTurret(pos, speed, direction, theGameTime, gamepad_state, key_state, mouse_state);
+                RotateTurret(jeepPos, speed, direction, theGameTime, gamepad_state, key_state, mouse_state);
             else
             {
-                RotateTurret(pos, speed, direction, theGameTime, gamepad_state, key_state, mouse_state);
+                RotateTurret(jeepPos, speed, direction, theGameTime, gamepad_state, key_state, mouse_state);
             }
             base.Update(theGameTime, speed, direction);
         }
