@@ -27,6 +27,7 @@ namespace _2DGame489
         Sprite myBackground;
         Sprite myBackground2;
         Jeep Player1;
+        Reticle turretReticle;
 
         public Game1()
         {
@@ -49,6 +50,8 @@ namespace _2DGame489
             Player1 = new Jeep();
             //Player1.Scale = 0.5f;
 
+            turretReticle = new Reticle();
+
             base.Initialize();
         }
 
@@ -69,6 +72,8 @@ namespace _2DGame489
             myBackground2.Position = new Vector2(0, myBackground2.Position.Y - myBackground2.Size.Height);
 
             Player1.LoadContent(this.Content);
+
+            turretReticle.LoadContent(this.Content);
         }
 
         /// <summary>
@@ -108,6 +113,8 @@ namespace _2DGame489
 
             Player1.Update(gameTime);
 
+            turretReticle.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -127,6 +134,8 @@ namespace _2DGame489
             myBackground2.Draw(this.spriteBatch);
             //draw player
             Player1.Draw(this.spriteBatch);
+
+            turretReticle.Draw(this.spriteBatch);
 
             spriteBatch.End();
 

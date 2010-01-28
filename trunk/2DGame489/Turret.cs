@@ -18,11 +18,11 @@ namespace _2DGame489
 
         Vector2 speed = Vector2.Zero;
         Vector2 direction = Vector2.Zero;
-
+          
         public void LoadContent(ContentManager theContentManager)
         {
             base.LoadContent(theContentManager, TURRET1_ASSET_NAME);
-            base.LoadContent(theContentManager, TURRET2_ASSET_NAME);
+            //base.LoadContent(theContentManager, TURRET2_ASSET_NAME);
             Scale = 1.0f;
             is_projectile = false;   //turret is not a projectile
         }
@@ -36,11 +36,12 @@ namespace _2DGame489
         public void MoveTurret(Vector2 jeepPos, Vector2 speed, Vector2 direction, 
             GameTime theGameTime, GamePadState gamepad_state, KeyboardState key_state, MouseState mouse_state)
         {
+            /*
             if (Position.X != jeepPos.X + 40 && Position.Y != jeepPos.Y + 75)   //just in case turret gets lost :)
             {
                 Position.X = jeepPos.X + 40;
                 Position.Y = jeepPos.Y + 75;
-            }
+            }*/
             if (gamepad_state.ThumbSticks.Right != Vector2.Zero)
                 RotateTurret(jeepPos, speed, direction, theGameTime, gamepad_state, key_state, mouse_state);
             else
