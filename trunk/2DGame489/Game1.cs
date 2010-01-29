@@ -65,10 +65,10 @@ namespace _2DGame489
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            myBackground.LoadContent(this.Content, "bowser");
+            myBackground.LoadContent(this.Content, "background");
             myBackground.Position = new Vector2(0, 0);
 
-            myBackground2.LoadContent(this.Content, "bowser");
+            myBackground2.LoadContent(this.Content, "background");
             myBackground2.Position = new Vector2(0, myBackground2.Position.Y - myBackground2.Size.Height);
 
             Player1.LoadContent(this.Content);
