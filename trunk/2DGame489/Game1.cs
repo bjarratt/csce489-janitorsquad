@@ -130,6 +130,28 @@ namespace _2DGame489
             }
         }
 
+        // Remove any obstacles that are no longer in view
+        protected void garbageCollectObstacles()
+        {
+            LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
+            LinkedListNode<List<Obstacle>> nextNode = null;
+            while (obstacleMatrixNode != null)
+            {
+                if (obstacleMatrixNode.Value == null ||
+                    obstacleMatrixNode.Value.Count == 0 ||
+                    obstacleMatrixNode.Value[0].Position.Y > MAX_WINY)
+                {
+                    nextNode = obstacleMatrixNode.Next;
+                    obstacleMatrix.Remove(obstacleMatrixNode);
+                    obstacleMatrixNode = nextNode;
+                }
+                else
+                {
+                    obstacleMatrixNode = obstacleMatrixNode.Next;
+                }
+            }
+        }
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -150,6 +172,8 @@ namespace _2DGame489
             myBackground.Position += distanceTravelled;
             myBackground2.Position += distanceTravelled;
 
+            // Perform garbage collection on obstacles
+            garbageCollectObstacles();
 
             // Update obstacles based on scrolling background
             LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
