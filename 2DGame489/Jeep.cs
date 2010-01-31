@@ -16,7 +16,7 @@ namespace _2DGame489
         const string JEEP_ASSET_NAME = "jeep-hurricane-9";  
         const int START_POS_X = 400;    //Player starting position
         const int START_POS_Y = 450;
-        const int JEEP_SPEED = 600;     //speed constant
+        const int JEEP_SPEED = 350;     //speed constant
         const int UP = -1;
         const int DOWN = 1;
         const int RIGHT = 1;

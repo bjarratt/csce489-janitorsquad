@@ -28,6 +28,18 @@ namespace _2DGame489
         Sprite myBackground2;
         Jeep Player1;
         Reticle turretReticle;
+        LinkedList<List<Obstacle>> obstacleMatrix;
+        Obstacle smallObstacleLoader; // Used to load the first instance of a small obstacle
+
+        // Defined to prevent overlapping when obstacles are randomly generated
+        const int UNIT_OBSTACLE_WIDTH = 50;
+        const int UNIT_OBSTACLE_HEIGHT = 50;
+
+        Random randNumGenerator; // Used for various randomly generated events, like obstacle placement
+
+        float previousY;
+
+        const int SCROLL_SPEED = 300;
 
         public Game1()
         {
@@ -43,7 +55,6 @@ namespace _2DGame489
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             myBackground = new Sprite();
             myBackground2 = new Sprite();
 
@@ -51,6 +62,20 @@ namespace _2DGame489
             //Player1.Scale = 0.5f;
 
             turretReticle = new Reticle();
+
+            this.previousY = 0;
+
+            /*
+            for (int i = 0; i < (MAX_WINY / UNIT_OBSTACLE_HEIGHT) + 1; i++)
+            {
+                obstacleMatrix.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
+            }
+             */
+            obstacleMatrix = new LinkedList<List<Obstacle>>();
+
+            smallObstacleLoader = new Obstacle("obstacle_small", 0);
+
+            randNumGenerator = new Random();
 
             base.Initialize();
         }
@@ -64,7 +89,6 @@ namespace _2DGame489
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
             myBackground.LoadContent(this.Content, "background");
             myBackground.Position = new Vector2(0, 0);
 
@@ -74,6 +98,8 @@ namespace _2DGame489
             Player1.LoadContent(this.Content);
 
             turretReticle.LoadContent(this.Content);
+
+            smallObstacleLoader.LoadContent(this.Content);
         }
 
         /// <summary>
@@ -83,6 +109,25 @@ namespace _2DGame489
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+        }
+
+        protected void generateNewRow(float yVal)
+        {
+            obstacleMatrix.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
+
+            const double OBSTACLE_PLACEMENT_ODDS = 0.015;
+
+            for (int i = 0; i < MAX_WINX / UNIT_OBSTACLE_WIDTH; i++)
+            {
+                if (randNumGenerator.NextDouble() < OBSTACLE_PLACEMENT_ODDS)
+                {
+                    Obstacle ob = new Obstacle("obstacle_small",0);
+                    ob.Position.X = i * UNIT_OBSTACLE_WIDTH;
+                    ob.Position.Y = yVal;
+                    ob.LoadContent(this.Content);
+                    obstacleMatrix.Last.Value.Add(ob);
+                }
+            }
         }
 
         /// <summary>
@@ -97,14 +142,39 @@ namespace _2DGame489
                 this.Exit();
             if (Keyboard.GetState(PlayerIndex.One).IsKeyDown(Keys.Escape))
                 this.Exit();
-
-            // TODO: Add your update logic here
             
             //Scrolling Background Update stuff
-            Vector2 speed = new Vector2(0, 300);    //300 is arbitrary... it defines how fast the background scrolls
+            Vector2 speed = new Vector2(0, SCROLL_SPEED);
             Vector2 dir = new Vector2(0, 1);        //background movement is in Y direction only
-            myBackground.Position += speed * dir * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            myBackground2.Position += speed * dir * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Vector2 distanceTravelled = speed * dir * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            myBackground.Position += distanceTravelled;
+            myBackground2.Position += distanceTravelled;
+
+
+            // Update obstacles based on scrolling background
+            LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
+            while (obstacleMatrixNode != null)
+            {
+                // Iterate through the obstacles in the given row
+                for (int i = 0; i < obstacleMatrixNode.Value.Count; i++)
+                {
+                    obstacleMatrixNode.Value[i].Position += distanceTravelled;
+                }
+                obstacleMatrixNode = obstacleMatrixNode.Next;
+            }
+
+            // Create a new row of obstacles if needed
+            if ((this.previousY + distanceTravelled.Y) >= UNIT_OBSTACLE_HEIGHT)
+            {
+                this.previousY = (this.previousY + distanceTravelled.Y) % UNIT_OBSTACLE_HEIGHT;
+                generateNewRow(this.previousY - UNIT_OBSTACLE_HEIGHT);
+            }
+            else
+            {
+                this.previousY += distanceTravelled.Y;
+            }
+
+
             //these if-statements shuffle the pictures as they go out of view
             if (myBackground2.Position.Y > MAX_WINY)
                 myBackground2.Position.Y = -myBackground2.Size.Height;
@@ -126,13 +196,25 @@ namespace _2DGame489
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-
             spriteBatch.Begin();
-            //draw scrolling background
+
+            // Draw scrolling background
             myBackground.Draw(this.spriteBatch);
             myBackground2.Draw(this.spriteBatch);
-            //draw player
+
+            // Draw obstacles
+            LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
+            while (obstacleMatrixNode != null)
+            {
+                // Iterate through the obstacles in the given row
+                for (int i = 0; i < obstacleMatrixNode.Value.Count; i++)
+                {
+                    obstacleMatrixNode.Value[i].Draw(this.spriteBatch);
+                }
+                obstacleMatrixNode = obstacleMatrixNode.Next;
+            }
+
+            // Draw player
             Player1.Draw(this.spriteBatch);
 
             turretReticle.Draw(this.spriteBatch);
