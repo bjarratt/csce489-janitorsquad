@@ -41,6 +41,33 @@ namespace _2DGame489
 
         const int SCROLL_SPEED = 300;
 
+        //screen management elements
+        private enum Screen
+        {
+            Title,
+            Main,
+            Inventory,
+            Menu
+        }
+        Screen mCurrentScreen = Screen.Title;
+
+        private enum MenuOptions
+        {
+            Resume,
+            Inventory,
+            ExitGame
+        }
+        MenuOptions mCurrentMenuOption = MenuOptions.Resume;
+
+        Texture2D mTitleScreen;
+        Texture2D mMainScreen;
+        //Texture2D mInventoryScreen;
+        Texture2D mMenu;
+        Texture2D mMenuOptions;
+        Texture2D bg;
+
+        KeyboardState mPreviousKeyboardState;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -89,6 +116,15 @@ namespace _2DGame489
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            //add all menu content
+            mTitleScreen = Content.Load<Texture2D>("Title");
+            mMainScreen = Content.Load<Texture2D>("MainScreen");
+            //mInventoryScreen = Content.Load<Texture2D>("Inventory");
+            mMenu = Content.Load<Texture2D>("Menu");
+            mMenuOptions = Content.Load<Texture2D>("MenuOptions2");
+            bg = Content.Load<Texture2D>("bg");
+
+            //main game screen content
             myBackground.LoadContent(this.Content, "background");
             myBackground.Position = new Vector2(0, 0);
 
@@ -164,6 +200,118 @@ namespace _2DGame489
                 this.Exit();
             if (Keyboard.GetState(PlayerIndex.One).IsKeyDown(Keys.Escape))
                 this.Exit();
+
+            //Menu screen logic
+            KeyboardState aKeyboardState = Keyboard.GetState();
+            switch (mCurrentScreen)
+            {
+                case Screen.Title:
+                    {
+                        //If the user presses the "X" key while on the Title screen, start the game
+                        //by switching the current state to the Main Screen
+                        if (aKeyboardState.IsKeyDown(Keys.X) == true)
+                        {
+                            mCurrentScreen = Screen.Main;
+                        }
+                        break;
+                    }
+                case Screen.Main:
+                    {
+                        //If the user presses the "P" key while in the main game screen, bring
+                        //up the Menu options by switching the current state to Menu
+                        if (aKeyboardState.IsKeyDown(Keys.P) == true)
+                        {
+                            mCurrentScreen = Screen.Menu;
+                        }
+                        break;
+                    }
+                /*case Screen.Inventory:
+                    {
+                        //If the user presses the "X" key while in the Inventory screen, close
+                        //the inventory screen and resume the game by switching the current state
+                        //to the Main screen
+                        if (aKeyboardState.IsKeyDown(Keys.X) == true && mPreviousKeyboardState.IsKeyDown(Keys.X) == false)
+                        {
+                            mCurrentScreen = Screen.Main;
+                        }
+                        break;
+                    }*/
+                case Screen.Menu:
+                    {
+                        //Move the currently highlighted menu option 
+                        //up and down depending on what key the user has pressed
+                        if (aKeyboardState.IsKeyDown(Keys.Down) == true && mPreviousKeyboardState.IsKeyDown(Keys.Down) == false)
+                        {
+                            //Move selection down
+                            switch (mCurrentMenuOption)
+                            {
+                                case MenuOptions.Resume:
+                                    {
+                                        mCurrentMenuOption = MenuOptions.ExitGame;
+                                        break;
+                                    }
+                                /*case MenuOptions.Inventory:
+                                    {
+                                        mCurrentMenuOption = MenuOptions.ExitGame;
+                                        break;
+                                    }*/
+                            }
+
+                        }
+
+                        if (aKeyboardState.IsKeyDown(Keys.Up) == true && mPreviousKeyboardState.IsKeyDown(Keys.Up) == false)
+                        {
+                            //Move selection up
+                            switch (mCurrentMenuOption)
+                            {
+                                /* case MenuOptions.Inventory:
+                                     {
+                                         mCurrentMenuOption = MenuOptions.Resume;
+                                         break;
+                                     }*/
+                                case MenuOptions.ExitGame:
+                                    {
+                                        mCurrentMenuOption = MenuOptions.Resume;
+                                        break;
+                                    }
+                            }
+                        }
+
+                        //If the user presses the "X" key, move the state to the 
+                        //appropriate game state based on the current selection
+                        if (aKeyboardState.IsKeyDown(Keys.X) == true)
+                        {
+                            switch (mCurrentMenuOption)
+                            {
+                                //Return to the Main game screen and close the menu
+                                case MenuOptions.Resume:
+                                    {
+                                        mCurrentScreen = Screen.Main;
+                                        break;
+                                    }
+                                //Open the Inventory screen
+                                /*&case MenuOptions.Inventory:
+                                    {
+                                        mCurrentScreen = Screen.Inventory;
+                                        break;
+                                    }*/
+                                //Exit the game
+                                case MenuOptions.ExitGame:
+                                    {
+                                        this.Exit();
+                                        break;
+                                    }
+                            }
+
+                            //Reset the selected menu option to Resume
+                            mCurrentMenuOption = MenuOptions.Resume;
+                        }
+                        break;
+                    }
+            }
+
+            //Store the Keyboard state
+            mPreviousKeyboardState = aKeyboardState;
             
             //Scrolling Background Update stuff
             Vector2 speed = new Vector2(0, SCROLL_SPEED);
@@ -222,26 +370,82 @@ namespace _2DGame489
 
             spriteBatch.Begin();
 
-            // Draw scrolling background
-            myBackground.Draw(this.spriteBatch);
-            myBackground2.Draw(this.spriteBatch);
-
-            // Draw obstacles
-            LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
-            while (obstacleMatrixNode != null)
+            //Draw all screen elements
+            switch (mCurrentScreen)
             {
-                // Iterate through the obstacles in the given row
-                for (int i = 0; i < obstacleMatrixNode.Value.Count; i++)
-                {
-                    obstacleMatrixNode.Value[i].Draw(this.spriteBatch);
-                }
-                obstacleMatrixNode = obstacleMatrixNode.Next;
+                case Screen.Title:
+                    {
+                        spriteBatch.Draw(mTitleScreen, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
+                        break;
+                    }
+
+                case Screen.Main:
+                    {
+                        //draw scrolling background
+                        myBackground.Draw(this.spriteBatch);
+                        myBackground2.Draw(this.spriteBatch);
+                        //draw player
+                        Player1.Draw(this.spriteBatch);
+
+                        turretReticle.Draw(this.spriteBatch);
+
+                        // Draw obstacles
+                        LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
+                        while (obstacleMatrixNode != null)
+                        {
+                            // Iterate through the obstacles in the given row
+                            for (int i = 0; i < obstacleMatrixNode.Value.Count; i++)
+                            {
+                                obstacleMatrixNode.Value[i].Draw(this.spriteBatch);
+                            }
+                            obstacleMatrixNode = obstacleMatrixNode.Next;
+                        }
+
+                        break;
+                    }
+
+                case Screen.Menu:
+                    {
+                        //draw background to be displayed under menu screen
+                        myBackground.Draw(this.spriteBatch);
+                        spriteBatch.Draw(bg, new Rectangle(0, 0, MAX_WINX, MAX_WINY), Color.Black);
+                        spriteBatch.Draw(mMenu, new Rectangle(this.Window.ClientBounds.Width / 2 - mMenu.Width / 2, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2, mMenu.Width, mMenu.Height), Color.White);
+
+                        switch (mCurrentMenuOption)
+                        {
+                            case MenuOptions.Resume:
+                                {
+                                    spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 50, 250, 50), new Rectangle(0, 0, 250, 50), Color.Gold);
+                                    spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 100, 250, 50), new Rectangle(0, 50, 250, 50), Color.White);
+                                    //spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 150, 250, 50), new Rectangle(0, 100, 250, 50), Color.White);
+                                    break;
+                                }
+
+                            /*case MenuOptions.Inventory:
+                                {
+                                    spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 50, 250, 50), new Rectangle(0, 0, 250, 50), Color.White);
+                                    spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 100, 250, 50), new Rectangle(0, 50, 250, 50), Color.Gold);
+                                    spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 150, 250, 50), new Rectangle(0, 100, 250, 50), Color.White);
+                                    break;
+                                }*/
+
+                            case MenuOptions.ExitGame:
+                                {
+                                    spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 50, 250, 50), new Rectangle(0, 0, 250, 50), Color.White);
+                                    spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 100, 250, 50), new Rectangle(0, 50, 250, 50), Color.Gold);
+                                    //spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 150, 250, 50), new Rectangle(0, 100, 250, 50), Color.Gold);
+                                    break;
+                                }
+                        }
+                        break;
+                    }
+
+                /*case Screen.Inventory:
+                    {
+                        spriteBatch.Draw(mInventoryScreen, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
+                        break;
+                    }*/
             }
-
-            // Draw player
-            Player1.Draw(this.spriteBatch);
-
-            turretReticle.Draw(this.spriteBatch);
 
             spriteBatch.End();
 
