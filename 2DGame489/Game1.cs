@@ -384,10 +384,6 @@ namespace _2DGame489
                         //draw scrolling background
                         myBackground.Draw(this.spriteBatch);
                         myBackground2.Draw(this.spriteBatch);
-                        //draw player
-                        Player1.Draw(this.spriteBatch);
-
-                        turretReticle.Draw(this.spriteBatch);
 
                         // Draw obstacles
                         LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
@@ -400,6 +396,11 @@ namespace _2DGame489
                             }
                             obstacleMatrixNode = obstacleMatrixNode.Next;
                         }
+
+                        //draw player
+                        Player1.Draw(this.spriteBatch);
+
+                        turretReticle.Draw(this.spriteBatch);
 
                         break;
                     }
