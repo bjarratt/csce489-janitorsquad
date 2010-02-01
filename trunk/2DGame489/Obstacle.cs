@@ -12,11 +12,9 @@ namespace _2DGame489
 {
     class Obstacle : Sprite
     {
-        private int scrollSpeed;
-        public Obstacle( string assetName, int scrollSpeed )
+        public Obstacle( string assetName )
         {
             this.AssetName = assetName;
-            this.scrollSpeed = scrollSpeed;
         }
 
         public void LoadContent(ContentManager theContentManager)

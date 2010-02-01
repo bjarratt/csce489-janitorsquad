@@ -30,6 +30,7 @@ namespace _2DGame489
         Reticle turretReticle;
         LinkedList<List<Obstacle>> obstacleMatrix;
         Obstacle smallObstacleLoader; // Used to load the first instance of a small obstacle
+        Obstacle smallDestroyedObstacleLoader;
 
         // Defined to prevent overlapping when obstacles are randomly generated
         const int UNIT_OBSTACLE_WIDTH = 50;
@@ -39,7 +40,7 @@ namespace _2DGame489
 
         float previousY;
 
-        const int SCROLL_SPEED = 300;
+        const int SCROLL_SPEED = 350;
 
         //screen management elements
         private enum Screen
@@ -92,15 +93,10 @@ namespace _2DGame489
 
             this.previousY = 0;
 
-            /*
-            for (int i = 0; i < (MAX_WINY / UNIT_OBSTACLE_HEIGHT) + 1; i++)
-            {
-                obstacleMatrix.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
-            }
-             */
             obstacleMatrix = new LinkedList<List<Obstacle>>();
 
-            smallObstacleLoader = new Obstacle("obstacle_small", 0);
+            smallObstacleLoader = new Obstacle("obstacle_small");
+            smallDestroyedObstacleLoader = new Obstacle("obstacle_small_destroyed");
 
             randNumGenerator = new Random();
 
@@ -136,6 +132,7 @@ namespace _2DGame489
             turretReticle.LoadContent(this.Content);
 
             smallObstacleLoader.LoadContent(this.Content);
+            smallDestroyedObstacleLoader.LoadContent(this.Content);
         }
 
         /// <summary>
@@ -157,7 +154,7 @@ namespace _2DGame489
             {
                 if (randNumGenerator.NextDouble() < OBSTACLE_PLACEMENT_ODDS)
                 {
-                    Obstacle ob = new Obstacle("obstacle_small",0);
+                    Obstacle ob = new Obstacle("obstacle_small");
                     ob.Position.X = i * UNIT_OBSTACLE_WIDTH;
                     ob.Position.Y = yVal;
                     ob.LoadContent(this.Content);
@@ -185,6 +182,34 @@ namespace _2DGame489
                 {
                     obstacleMatrixNode = obstacleMatrixNode.Next;
                 }
+            }
+        }
+
+        // Tests collisions between the jeep and other in-game elements
+        protected void processObstacleCollisions()
+        {
+            // Update obstacles based on scrolling background
+            LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
+            while (obstacleMatrixNode != null)
+            {
+                // Iterate through the obstacles in the given row
+                for (int i = 0; i < obstacleMatrixNode.Value.Count; i++)
+                {
+                    Obstacle currentOb = obstacleMatrixNode.Value[i];
+                    Rectangle boundingBox1 = new Rectangle((int)Player1.Position.X, (int)Player1.Position.Y, Player1.Source.Width, Player1.Source.Height);
+                    Rectangle boundingBox2 = new Rectangle((int)currentOb.Position.X, (int)currentOb.Position.Y, currentOb.Source.Width, currentOb.Source.Height);
+                    
+                    if (boundingBox1.Intersects(boundingBox2)) // Jeep collided with an obstacle
+                    {
+                        Obstacle ob = new Obstacle("obstacle_small_destroyed");
+                        ob.Position = obstacleMatrixNode.Value[i].Position;
+                        ob.LoadContent(this.Content);
+                        obstacleMatrixNode.Value[i] = ob;
+
+                        // TODO: Put damage updating function call here
+                    }
+                }
+                obstacleMatrixNode = obstacleMatrixNode.Next;
             }
         }
 
@@ -310,16 +335,16 @@ namespace _2DGame489
                     }
             }
 
-            //Store the Keyboard state
+            // Store the Keyboard state
             mPreviousKeyboardState = aKeyboardState;
             
-            //Scrolling Background Update stuff
+            // Update scrolling background
             Vector2 speed = new Vector2(0, SCROLL_SPEED);
             Vector2 dir = new Vector2(0, 1);        //background movement is in Y direction only
             Vector2 distanceTravelled = speed * dir * (float)gameTime.ElapsedGameTime.TotalSeconds;
             myBackground.Position += distanceTravelled;
             myBackground2.Position += distanceTravelled;
-
+            
             // Perform garbage collection on obstacles
             garbageCollectObstacles();
 
@@ -354,6 +379,9 @@ namespace _2DGame489
                 myBackground.Position.Y = -myBackground.Size.Height;
 
             Player1.Update(gameTime);
+
+            // Perform collision detection
+            processObstacleCollisions();
 
             turretReticle.Update(gameTime);
 
