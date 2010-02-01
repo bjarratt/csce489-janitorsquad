@@ -37,6 +37,21 @@ namespace _2DGame489
         Vector2 speed = Vector2.Zero;   //init jeep speed to zero
         Vector2 direction = Vector2.Zero;   //init jeep direction to zero
 
+        //jeep health variables/methods
+        public int CurrentHealth
+        {
+            get { return currentHealth; }
+            set { currentHealth = maxHealth; }
+        }
+        int currentHealth;
+        //total health
+        public int MaxHealth
+        {
+            get { return maxHealth; }
+            set { maxHealth = 3; }
+        }
+        int maxHealth;
+
         KeyboardState previous_keyboard_state;  //save the previous keyboard state
         GamePadState previous_gamepad_state;    //save the previous gamepad state
 
