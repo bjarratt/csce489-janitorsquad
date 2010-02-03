@@ -21,6 +21,10 @@ namespace _2DGame489
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        public SpriteBatch SpriteBatch
+        {
+            get { return spriteBatch; }
+        }
 
         const int MAX_WINX = 800;
         const int MAX_WINY = 600;
@@ -41,6 +45,22 @@ namespace _2DGame489
         // Defined to prevent overlapping when obstacles are randomly generated
         const int UNIT_OBSTACLE_WIDTH = 50;
         const int UNIT_OBSTACLE_HEIGHT = 50;
+
+        #region Random Numbers and Helper functions
+        private static Random random = new Random();    //Particle random number generator
+        public static Random Random
+        {
+            get { return random; }
+        }
+
+        //  a handy little function that gives a random float between two
+        // values. This will be used in several places in the sample, in particilar in
+        // ParticleSystem.InitializeParticle.
+        public static float RandomBetween(float min, float max)
+        {
+            return min + (float)random.NextDouble() * (max - min);
+        }
+        #endregion
 
         Random randNumGenerator; // Used for various randomly generated events, like obstacle placement
 
