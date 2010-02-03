@@ -133,22 +133,22 @@ namespace _2DGame489
                 }
                 else
                 {
-                    if (currentKeyState.IsKeyDown(Keys.Left) == true)
+                    if (currentKeyState.IsKeyDown(Keys.Left) || currentKeyState.IsKeyDown(Keys.A))
                     {
                         speed.X = JEEP_SPEED;
                         direction.X = LEFT;
                     }
-                    if (currentKeyState.IsKeyDown(Keys.Right) == true)
+                    if (currentKeyState.IsKeyDown(Keys.Right) || currentKeyState.IsKeyDown(Keys.D))
                     {
                         speed.X = JEEP_SPEED;
                         direction.X = RIGHT;
                     }
-                    if (currentKeyState.IsKeyDown(Keys.Up) == true)
+                    if (currentKeyState.IsKeyDown(Keys.Up) || currentKeyState.IsKeyDown(Keys.W))
                     {
                         speed.Y = JEEP_SPEED;
                         direction.Y = UP;
                     }
-                    if (currentKeyState.IsKeyDown(Keys.Down) == true)
+                    if (currentKeyState.IsKeyDown(Keys.Down) || currentKeyState.IsKeyDown(Keys.S))
                     {
                         speed.Y = JEEP_SPEED;
                         direction.Y = DOWN;
