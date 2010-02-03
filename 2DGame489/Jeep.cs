@@ -34,7 +34,13 @@ namespace _2DGame489
         const int TURRET_POS_X = 34;
         const int TURRET_POS_Y = 110;
 
-        //private Vector2 TURRET_POS = new Vector2(34, 110);
+        const int LEFT_TIRE_POS_X = 1;
+        const int LEFT_TIRE_POS_Y = 11;
+        const int RIGHT_TIRE_POS_X = 55;
+        const int RIGHT_TIRE_POS_Y = 10;
+
+        Sprite leftTire = new Sprite();
+        Sprite rightTire = new Sprite();
 
         enum State      //what state is the jeep in?  Driving?  In the air?  etc...
         {
@@ -63,6 +69,11 @@ namespace _2DGame489
         KeyboardState previous_keyboard_state;  //save the previous keyboard state
         GamePadState previous_gamepad_state;    //save the previous gamepad state
 
+        public Jeep()
+        {
+            
+        }
+
         public void LoadContent(ContentManager theContentManager)
         {
             mContentManager = theContentManager;
@@ -79,6 +90,11 @@ namespace _2DGame489
 
             Jeep_Turret.Position = new Vector2(Position.X + TURRET_POS_X, Position.Y + TURRET_POS_Y);
             Jeep_Turret.LoadContent(theContentManager);
+
+            leftTire.Position = new Vector2(Position.X + LEFT_TIRE_POS_X, Position.Y + LEFT_TIRE_POS_Y);
+            leftTire.LoadContent(theContentManager, "left_tire");
+            rightTire.Position = new Vector2(Position.X + RIGHT_TIRE_POS_X, Position.Y + RIGHT_TIRE_POS_Y);
+            rightTire.LoadContent(theContentManager, "right_tire");
         }
 
         public void Update(GameTime theGameTime)
@@ -95,7 +111,13 @@ namespace _2DGame489
             previous_gamepad_state = current_gamepad_state;
 
             base.Update(theGameTime, speed, direction);     //call Sprite.Update
-            Jeep_Turret.Position = new Vector2(Position.X + TURRET_POS_X, Position.Y + TURRET_POS_Y);
+            Jeep_Turret.Position.X = Position.X + TURRET_POS_X;
+            Jeep_Turret.Position.Y = Position.Y + TURRET_POS_Y;
+
+            leftTire.Position.X = Position.X + LEFT_TIRE_POS_X;
+            leftTire.Position.Y = Position.Y + LEFT_TIRE_POS_Y;
+            rightTire.Position.X = Position.X + RIGHT_TIRE_POS_X;
+            rightTire.Position.Y = Position.Y + RIGHT_TIRE_POS_Y;
         }
 
         private void UpdateMovement(KeyboardState currentKeyState, GamePadState currentGamepadState)
@@ -247,6 +269,8 @@ namespace _2DGame489
 
         public override void Draw(SpriteBatch theSpriteBatch)
         {
+            leftTire.Draw(theSpriteBatch);
+            rightTire.Draw(theSpriteBatch);
             base.Draw(theSpriteBatch);  //draw jeep before bullets
             Jeep_Turret.Draw(theSpriteBatch);
             foreach (Bullet aBullet in bullets)
