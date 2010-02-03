@@ -34,10 +34,14 @@ namespace _2DGame489
         const int TURRET_POS_X = 34;
         const int TURRET_POS_Y = 110;
 
-        const int LEFT_TIRE_POS_X = 1;
-        const int LEFT_TIRE_POS_Y = 11;
-        const int RIGHT_TIRE_POS_X = 55;
-        const int RIGHT_TIRE_POS_Y = 10;
+        const int LEFT_TIRE_POS_X = 7;
+        const int LEFT_TIRE_POS_Y = 24;
+        const int RIGHT_TIRE_POS_X = 61;
+        const int RIGHT_TIRE_POS_Y = 24;
+
+        const int MAX_TIRE_INCREMENTS = 15;
+        const float TIRE_ROTATION_INCREMENT = MathHelper.Pi / (12 * MAX_TIRE_INCREMENTS);
+        private int currentTireIncrement = 0;
 
         Sprite leftTire = new Sprite();
         Sprite rightTire = new Sprite();
@@ -93,8 +97,10 @@ namespace _2DGame489
 
             leftTire.Position = new Vector2(Position.X + LEFT_TIRE_POS_X, Position.Y + LEFT_TIRE_POS_Y);
             leftTire.LoadContent(theContentManager, "left_tire");
+            leftTire.origin = new Vector2(leftTire.Source.Width / 2, leftTire.Source.Height / 2);
             rightTire.Position = new Vector2(Position.X + RIGHT_TIRE_POS_X, Position.Y + RIGHT_TIRE_POS_Y);
             rightTire.LoadContent(theContentManager, "right_tire");
+            rightTire.origin = new Vector2(rightTire.Source.Width / 2, rightTire.Source.Height / 2);
         }
 
         public void Update(GameTime theGameTime)
@@ -118,6 +124,44 @@ namespace _2DGame489
             leftTire.Position.Y = Position.Y + LEFT_TIRE_POS_Y;
             rightTire.Position.X = Position.X + RIGHT_TIRE_POS_X;
             rightTire.Position.Y = Position.Y + RIGHT_TIRE_POS_Y;
+
+            if (this.direction.X == LEFT)
+            {
+                if (currentTireIncrement > -MAX_TIRE_INCREMENTS)
+                {
+                    currentTireIncrement--;
+                    leftTire.rotation = currentTireIncrement * TIRE_ROTATION_INCREMENT;
+                    rightTire.rotation = currentTireIncrement * TIRE_ROTATION_INCREMENT;
+                }
+                //leftTire.rotation = -MathHelper.Pi / 8;
+                //rightTire.rotation = -MathHelper.Pi / 8;
+            }
+            else if (this.direction.X == RIGHT)
+            {
+                if (currentTireIncrement < MAX_TIRE_INCREMENTS)
+                {
+                    currentTireIncrement++;
+                    leftTire.rotation = currentTireIncrement * TIRE_ROTATION_INCREMENT;
+                    rightTire.rotation = currentTireIncrement * TIRE_ROTATION_INCREMENT;
+                }
+                //leftTire.rotation = MathHelper.Pi / 7;
+                //rightTire.rotation = MathHelper.Pi / 7;
+            }
+            else
+            {
+                if (currentTireIncrement > 0)
+                {
+                    currentTireIncrement--;
+                }
+                else if (currentTireIncrement < 0)
+                {
+                    currentTireIncrement++;
+                }
+                leftTire.rotation = currentTireIncrement * TIRE_ROTATION_INCREMENT;
+                rightTire.rotation = currentTireIncrement * TIRE_ROTATION_INCREMENT;
+            }
+            //leftTire.origin = new Vector2(leftTire.Position.X + (leftTire.Source.Width / 2), leftTire.Position.Y + (leftTire.Source.Height / 2));
+            //rightTire.origin = new Vector2(rightTire.Position.X + (rightTire.Source.Width / 2), rightTire.Position.Y + (rightTire.Source.Height / 2));
         }
 
         private void UpdateMovement(KeyboardState currentKeyState, GamePadState currentGamepadState)
