@@ -92,6 +92,8 @@ namespace _2DGame489
         {
             Velocity += Acceleration * dt;
             Position += Velocity * dt;
+            //move the effect with scrolling environment
+            Position.Y += dt * 200;
 
             Rotation += RotationSpeed * dt;
 

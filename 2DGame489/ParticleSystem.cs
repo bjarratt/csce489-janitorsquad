@@ -241,6 +241,7 @@ namespace _2DGame489
             // first, call PickRandomDirection to figure out which way the particle
             // will be moving. velocity and acceleration's values will come from this.
             Vector2 direction = PickRandomDirection();
+            //direction.Y = direction.Y + 0.5f;
 
             // pick some random values for our particle
             float velocity =

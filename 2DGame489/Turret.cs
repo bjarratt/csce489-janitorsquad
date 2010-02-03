@@ -53,8 +53,8 @@ namespace _2DGame489
                 Vector2 dir = gamepad_state.ThumbSticks.Right;
                 dir.Normalize();
 
-                if (dir.X >= 0) rotation = (float)Math.Atan(-dir.Y / dir.X);
-                else rotation = (float)Math.Atan(-dir.Y / dir.X) + MathHelper.Pi;
+                if (dir.X >= 0) rotation = (float)Math.Atan(-dir.Y / dir.X) - MathHelper.PiOver2;
+                else rotation = (float)Math.Atan(-dir.Y / dir.X) + MathHelper.PiOver2;
                 origin = new Vector2(13, 11);     //18, 27origin of rotation for turret 
             }
             else
