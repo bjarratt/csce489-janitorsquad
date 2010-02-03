@@ -150,7 +150,7 @@ namespace _2DGame489
 
             // create the particle systems and add them to the components list.
             // we should never see more than four explosions at once
-            explosion = new ExplosionPS(this, 1);
+            explosion = new ExplosionPS(this, 2);
             Components.Add(explosion);
         }
 
