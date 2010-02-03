@@ -38,6 +38,8 @@ namespace _2DGame489
         Obstacle smallObstacleLoader; // Used to load the first instance of a small obstacle
         Obstacle smallDestroyedObstacleLoader;
 
+        ExplosionPS explosion;
+
         // Used for collision detection
         private Rectangle boundingBox1;
         private Rectangle boundingBox2;
@@ -100,6 +102,11 @@ namespace _2DGame489
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            // create the particle systems and add them to the components list.
+            // we should never see more than four explosions at once
+            explosion = new ExplosionPS(this, 1);
+            Components.Add(explosion);
         }
 
         /// <summary>
@@ -249,6 +256,12 @@ namespace _2DGame489
                     currentOb.LoadContent(this.Content);
 
                     // TODO: Put damage updating function call here
+
+                    //make big explosion
+                    Vector2 where;
+                    where.X = currentOb.Position.X + currentOb.Source.Width / 2;
+                    where.Y = currentOb.Position.Y + currentOb.Source.Height / 2;
+                    explosion.AddParticles(where);
                 }
                 obstacleMatrixNode = obstacleMatrixNode.Next;
             }
