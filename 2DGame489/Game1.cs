@@ -48,6 +48,11 @@ namespace _2DGame489
         const int UNIT_OBSTACLE_WIDTH = 50;
         const int UNIT_OBSTACLE_HEIGHT = 50;
 
+        private const double OBSTACLE_PLACEMENT_ODDS = 0.015;
+        private const double OBSTACLE_ROCK_ODDS = 0.50;
+        //private const double OBSTACLE_POND_ODDS = 0.25;
+        private const double OBSTACLE_LOG_ODDS = 0.50;
+
         #region Random Numbers and Helper functions
         private static Random random = new Random();    //Particle random number generator
         public static Random Random
@@ -183,8 +188,6 @@ namespace _2DGame489
         {
             //obstacleList.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
 
-            const double OBSTACLE_PLACEMENT_ODDS = 0.015;
-
             for (int i = 0; i < MAX_WINX / UNIT_OBSTACLE_WIDTH; i++)
             {
                 if (randNumGenerator.NextDouble() < OBSTACLE_PLACEMENT_ODDS)
@@ -235,9 +238,11 @@ namespace _2DGame489
         {
             // Update obstacles based on scrolling background
             LinkedListNode<Obstacle> obstacleMatrixNode = obstacleList.First;
+            LinkedListNode<Obstacle> nextNode = null;
             while (obstacleMatrixNode != null)
             {
                 Obstacle currentOb = obstacleMatrixNode.Value;
+                nextNode = obstacleMatrixNode.Next;
                 //boundingBox1 = new Rectangle((int)Player1.Position.X, (int)Player1.Position.Y, Player1.Source.Width, Player1.Source.Height);
                 boundingBox1.X = (int)Player1.Position.X;
                 boundingBox1.Y = (int)Player1.Position.Y;
@@ -252,8 +257,10 @@ namespace _2DGame489
                 if (boundingBox1.Intersects(boundingBox2)) // Jeep collided with an obstacle
                 {
                     //Obstacle ob = new Obstacle("obstacle_small_destroyed");
-                    currentOb.AssetName = "obstacle_small_destroyed";
-                    currentOb.LoadContent(this.Content);
+                    //currentOb.AssetName = "obstacle_small_destroyed";
+                    //currentOb.LoadContent(this.Content);
+                    obstacleList.Remove(obstacleMatrixNode);
+                    recycledObstacles.AddLast(obstacleMatrixNode);
 
                     // TODO: Put damage updating function call here
 
@@ -263,7 +270,7 @@ namespace _2DGame489
                     where.Y = currentOb.Position.Y + currentOb.Source.Height / 2;
                     explosion.AddParticles(where);
                 }
-                obstacleMatrixNode = obstacleMatrixNode.Next;
+                obstacleMatrixNode = nextNode;
             }
         }
 
