@@ -89,9 +89,9 @@ namespace _2DGame489
         const int UNIT_OBSTACLE_HEIGHT = 50;
 
         private const double OBSTACLE_PLACEMENT_ODDS = 0.015;
-        private const double OBSTACLE_ROCK_ODDS = 0.50;
+        private const double OBSTACLE_ROCK_ODDS = 0.80;
         //private const double OBSTACLE_POND_ODDS = 0.25;
-        private const double OBSTACLE_LOG_ODDS = 0.50;
+        private const double OBSTACLE_LOG_ODDS = 0.20;
 
         #region Random Numbers and Helper functions
         private static Random random = new Random();    //Particle random number generator
@@ -235,10 +235,12 @@ namespace _2DGame489
         protected void generateNewRow(float yVal)
         {
             //obstacleList.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
+            double randomNum;
 
             for (int i = 0; i < MAX_WINX / UNIT_OBSTACLE_WIDTH; i++)
             {
-                if (randNumGenerator.NextDouble() < OBSTACLE_PLACEMENT_ODDS)
+                randomNum = randNumGenerator.NextDouble();
+                if (randomNum < OBSTACLE_PLACEMENT_ODDS)
                 {
                     LinkedListNode<Obstacle> obNode;
                     if (recycledObstacles.Count == 0)
@@ -250,6 +252,12 @@ namespace _2DGame489
                         obNode = recycledObstacles.First;
                         recycledObstacles.RemoveFirst();
                         obNode.Value.AssetName = "obstacle_small";
+                    }
+
+                    if (randomNum < OBSTACLE_LOG_ODDS * OBSTACLE_PLACEMENT_ODDS)
+                    {
+                        obNode.Value.AssetName = "obstacle_log";
+                        i++;
                     }
 
                     obNode.Value.Position.X = i * UNIT_OBSTACLE_WIDTH;
