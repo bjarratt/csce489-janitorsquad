@@ -67,7 +67,7 @@ namespace _2DGame489
             }
             dir.Normalize();
             if (dir.X >= 0) rotation = (float)Math.Atan(-dir.Y / dir.X);    //bullet fired to right... rot=atan(-Y/X)
-            else rotation = (float)Math.Atan(-dir.Y / dir.X) + 3.14159f;    //bullet fired to left... rot=atan(-Y/X)+pi
+            else rotation = (float)Math.Atan(-dir.Y / dir.X) + MathHelper.Pi;    //bullet fired to left... rot=atan(-Y/X)+pi
             origin = new Vector2(0, 9);     //origin of rotation for bullet                                                               //since orig picture faces right... need to flip horizontally    
         }
     }

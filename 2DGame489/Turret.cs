@@ -36,12 +36,6 @@ namespace _2DGame489
         public void MoveTurret(Vector2 jeepPos, Vector2 speed, Vector2 direction, 
             GameTime theGameTime, GamePadState gamepad_state, KeyboardState key_state, MouseState mouse_state)
         {
-            /*
-            if (Position.X != jeepPos.X + 40 && Position.Y != jeepPos.Y + 75)   //just in case turret gets lost :)
-            {
-                Position.X = jeepPos.X + 40;
-                Position.Y = jeepPos.Y + 75;
-            }*/
             if (gamepad_state.ThumbSticks.Right != Vector2.Zero)
                 RotateTurret(jeepPos, speed, direction, theGameTime, gamepad_state, key_state, mouse_state);
             else
@@ -58,18 +52,19 @@ namespace _2DGame489
             {
                 Vector2 dir = gamepad_state.ThumbSticks.Right;
                 dir.Normalize();
+
                 if (dir.X >= 0) rotation = (float)Math.Atan(-dir.Y / dir.X);
-                else rotation = (float)Math.Atan(-dir.Y / dir.X) + 3.14159f;
-                origin = new Vector2(27, 30);     //18, 27origin of rotation for turret 
+                else rotation = (float)Math.Atan(-dir.Y / dir.X) + MathHelper.Pi;
+                origin = new Vector2(13, 11);     //18, 27origin of rotation for turret 
             }
             else
             {
-                Vector2 dir = new Vector2(mouse_state.X - (Position.X + Size.Width / 2), (mouse_state.Y - (Position.Y + Size.Height / 2)));
+                //Vector2 dir = new Vector2(mouse_state.X - (Position.X + Size.Width / 2), (mouse_state.Y - (Position.Y + Size.Height / 2)));
+                Vector2 dir = new Vector2(mouse_state.X - (Position.X + 13), mouse_state.Y - (Position.Y + 11));
                 dir.Normalize();
-                dir.Y = -dir.Y;
-                if (dir.X >= 0) rotation = (float)Math.Atan(-dir.Y / dir.X);
-                else rotation = (float)Math.Atan(-dir.Y / dir.X) + 3.14159f;
-                origin = new Vector2(27, 30);     //18, 27origin of rotation for turret 
+                if (dir.X >= 0) rotation = (float)Math.Atan(dir.Y / dir.X) - MathHelper.PiOver2;
+                else rotation = (float)Math.Atan(dir.Y / dir.X) + MathHelper.PiOver2;
+                origin = new Vector2(13, 11);     //18, 27origin of rotation for turret 
             }
         }
 
