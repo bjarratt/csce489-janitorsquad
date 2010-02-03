@@ -1,4 +1,5 @@
 using System;
+using System.Runtime;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -28,9 +29,14 @@ namespace _2DGame489
         Sprite myBackground2;
         Jeep Player1;
         Reticle turretReticle;
-        LinkedList<List<Obstacle>> obstacleMatrix;
+        LinkedList<Obstacle> obstacleList;
+        LinkedList<Obstacle> recycledObstacles;
         Obstacle smallObstacleLoader; // Used to load the first instance of a small obstacle
         Obstacle smallDestroyedObstacleLoader;
+
+        // Used for collision detection
+        private Rectangle boundingBox1;
+        private Rectangle boundingBox2;
 
         // Defined to prevent overlapping when obstacles are randomly generated
         const int UNIT_OBSTACLE_WIDTH = 50;
@@ -40,7 +46,8 @@ namespace _2DGame489
 
         float previousY;
 
-        const int SCROLL_SPEED = 350;
+        private Vector2 SCROLL_SPEED = new Vector2(0, 350);
+        private Vector2 SCROLL_DIR = new Vector2(0, 1);
 
         //screen management elements
         private enum Screen
@@ -93,7 +100,8 @@ namespace _2DGame489
 
             this.previousY = 0;
 
-            obstacleMatrix = new LinkedList<List<Obstacle>>();
+            obstacleList = new LinkedList<Obstacle>();
+            recycledObstacles = new LinkedList<Obstacle>();
 
             smallObstacleLoader = new Obstacle("obstacle_small");
             smallDestroyedObstacleLoader = new Obstacle("obstacle_small_destroyed");
@@ -146,7 +154,7 @@ namespace _2DGame489
 
         protected void generateNewRow(float yVal)
         {
-            obstacleMatrix.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
+            //obstacleList.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
 
             const double OBSTACLE_PLACEMENT_ODDS = 0.015;
 
@@ -154,33 +162,43 @@ namespace _2DGame489
             {
                 if (randNumGenerator.NextDouble() < OBSTACLE_PLACEMENT_ODDS)
                 {
-                    Obstacle ob = new Obstacle("obstacle_small");
-                    ob.Position.X = i * UNIT_OBSTACLE_WIDTH;
-                    ob.Position.Y = yVal;
-                    ob.LoadContent(this.Content);
-                    obstacleMatrix.Last.Value.Add(ob);
+                    LinkedListNode<Obstacle> obNode;
+                    if (recycledObstacles.Count == 0)
+                    {
+                        obNode = new LinkedListNode<Obstacle>(new Obstacle("obstacle_small"));
+                    }
+                    else
+                    {
+                        obNode = recycledObstacles.First;
+                        recycledObstacles.RemoveFirst();
+                        obNode.Value.AssetName = "obstacle_small";
+                    }
+
+                    obNode.Value.Position.X = i * UNIT_OBSTACLE_WIDTH;
+                    obNode.Value.Position.Y = yVal;
+                    obNode.Value.LoadContent(this.Content);
+                    obstacleList.AddLast(obNode);
                 }
             }
         }
 
-        // Remove any obstacles that are no longer in view
+        // Recycle any obstacles that are no longer in view
         protected void garbageCollectObstacles()
         {
-            LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
-            LinkedListNode<List<Obstacle>> nextNode = null;
-            while (obstacleMatrixNode != null)
+            LinkedListNode<Obstacle> obstacleListNode = obstacleList.First;
+            LinkedListNode<Obstacle> nextNode = null;
+            while (obstacleListNode != null)
             {
-                if (obstacleMatrixNode.Value == null ||
-                    obstacleMatrixNode.Value.Count == 0 ||
-                    obstacleMatrixNode.Value[0].Position.Y > MAX_WINY)
+                if (obstacleListNode.Value.Position.Y > MAX_WINY)
                 {
-                    nextNode = obstacleMatrixNode.Next;
-                    obstacleMatrix.Remove(obstacleMatrixNode);
-                    obstacleMatrixNode = nextNode;
+                    nextNode = obstacleListNode.Next;
+                    obstacleList.Remove(obstacleListNode);
+                    recycledObstacles.AddLast(obstacleListNode);
+                    obstacleListNode = nextNode;
                 }
                 else
                 {
-                    obstacleMatrixNode = obstacleMatrixNode.Next;
+                    obstacleListNode = obstacleListNode.Next;
                 }
             }
         }
@@ -189,25 +207,28 @@ namespace _2DGame489
         protected void processObstacleCollisions()
         {
             // Update obstacles based on scrolling background
-            LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
+            LinkedListNode<Obstacle> obstacleMatrixNode = obstacleList.First;
             while (obstacleMatrixNode != null)
             {
-                // Iterate through the obstacles in the given row
-                for (int i = 0; i < obstacleMatrixNode.Value.Count; i++)
-                {
-                    Obstacle currentOb = obstacleMatrixNode.Value[i];
-                    Rectangle boundingBox1 = new Rectangle((int)Player1.Position.X, (int)Player1.Position.Y, Player1.Source.Width, Player1.Source.Height);
-                    Rectangle boundingBox2 = new Rectangle((int)currentOb.Position.X, (int)currentOb.Position.Y, currentOb.Source.Width, currentOb.Source.Height);
-                    
-                    if (boundingBox1.Intersects(boundingBox2)) // Jeep collided with an obstacle
-                    {
-                        Obstacle ob = new Obstacle("obstacle_small_destroyed");
-                        ob.Position = obstacleMatrixNode.Value[i].Position;
-                        ob.LoadContent(this.Content);
-                        obstacleMatrixNode.Value[i] = ob;
+                Obstacle currentOb = obstacleMatrixNode.Value;
+                //boundingBox1 = new Rectangle((int)Player1.Position.X, (int)Player1.Position.Y, Player1.Source.Width, Player1.Source.Height);
+                boundingBox1.X = (int)Player1.Position.X;
+                boundingBox1.Y = (int)Player1.Position.Y;
+                boundingBox1.Width = Player1.Source.Width;
+                boundingBox1.Height = Player1.Source.Height;
+                //boundingBox2 = new Rectangle((int)currentOb.Position.X, (int)currentOb.Position.Y, currentOb.Source.Width, currentOb.Source.Height);
+                boundingBox2.X = (int)currentOb.Position.X;
+                boundingBox2.Y = (int)currentOb.Position.Y;
+                boundingBox2.Width = currentOb.Source.Width;
+                boundingBox2.Height = currentOb.Source.Height;
 
-                        // TODO: Put damage updating function call here
-                    }
+                if (boundingBox1.Intersects(boundingBox2)) // Jeep collided with an obstacle
+                {
+                    //Obstacle ob = new Obstacle("obstacle_small_destroyed");
+                    currentOb.AssetName = "obstacle_small_destroyed";
+                    currentOb.LoadContent(this.Content);
+
+                    // TODO: Put damage updating function call here
                 }
                 obstacleMatrixNode = obstacleMatrixNode.Next;
             }
@@ -339,9 +360,9 @@ namespace _2DGame489
             mPreviousKeyboardState = aKeyboardState;
             
             // Update scrolling background
-            Vector2 speed = new Vector2(0, SCROLL_SPEED);
-            Vector2 dir = new Vector2(0, 1);        //background movement is in Y direction only
-            Vector2 distanceTravelled = speed * dir * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //Vector2 speed = new Vector2(0, SCROLL_SPEED);
+            //Vector2 dir = new Vector2(0, 1);        //background movement is in Y direction only
+            Vector2 distanceTravelled = SCROLL_SPEED * SCROLL_DIR * (float)gameTime.ElapsedGameTime.TotalSeconds;
             myBackground.Position += distanceTravelled;
             myBackground2.Position += distanceTravelled;
             
@@ -349,15 +370,11 @@ namespace _2DGame489
             garbageCollectObstacles();
 
             // Update obstacles based on scrolling background
-            LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
-            while (obstacleMatrixNode != null)
+            LinkedListNode<Obstacle> obstacleListNode = obstacleList.First;
+            while (obstacleListNode != null)
             {
-                // Iterate through the obstacles in the given row
-                for (int i = 0; i < obstacleMatrixNode.Value.Count; i++)
-                {
-                    obstacleMatrixNode.Value[i].Position += distanceTravelled;
-                }
-                obstacleMatrixNode = obstacleMatrixNode.Next;
+                obstacleListNode.Value.Position += distanceTravelled;
+                obstacleListNode = obstacleListNode.Next;
             }
 
             // Create a new row of obstacles if needed
@@ -394,6 +411,8 @@ namespace _2DGame489
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            GCLatencyMode oldGCMode = GCSettings.LatencyMode;
+            GCSettings.LatencyMode = GCLatencyMode.LowLatency;
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
@@ -414,15 +433,11 @@ namespace _2DGame489
                         myBackground2.Draw(this.spriteBatch);
 
                         // Draw obstacles
-                        LinkedListNode<List<Obstacle>> obstacleMatrixNode = obstacleMatrix.First;
-                        while (obstacleMatrixNode != null)
+                        LinkedListNode<Obstacle> obstacleListNode = obstacleList.First;
+                        while (obstacleListNode != null)
                         {
-                            // Iterate through the obstacles in the given row
-                            for (int i = 0; i < obstacleMatrixNode.Value.Count; i++)
-                            {
-                                obstacleMatrixNode.Value[i].Draw(this.spriteBatch);
-                            }
-                            obstacleMatrixNode = obstacleMatrixNode.Next;
+                            obstacleListNode.Value.Draw(this.spriteBatch);
+                            obstacleListNode = obstacleListNode.Next;
                         }
 
                         //draw player
@@ -479,6 +494,8 @@ namespace _2DGame489
             spriteBatch.End();
 
             base.Draw(gameTime);
+
+            GCSettings.LatencyMode = oldGCMode;
         }
     }
 }

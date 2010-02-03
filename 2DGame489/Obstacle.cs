@@ -26,10 +26,7 @@ namespace _2DGame489
 
         public void Update(GameTime theGameTime)
         {
-            // 25 is half of the width or height of the reticle
-            // Otherwise, the bullets go through the upper-left corner of the reticle, not the center
-            //this.Position.X = Mouse.GetState().X - 25;
-            //this.Position.Y = Mouse.GetState().Y - 25;
+
         }
 
         public override void Draw(SpriteBatch theSpriteBatch)
