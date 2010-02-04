@@ -364,9 +364,9 @@ namespace _2DGame489
             {
                 case Screen.Title:
                     {
-                        //If the user presses the "X" key while on the Title screen, start the game
+                        //If the user presses the "Enter" key while on the Title screen, start the game
                         //by switching the current state to the Main Screen
-                        if (aKeyboardState.IsKeyDown(Keys.X) == true)
+                        if (aKeyboardState.IsKeyDown(Keys.Enter) == true)
                         {
                             mCurrentScreen = Screen.Main;
                         }
@@ -374,9 +374,9 @@ namespace _2DGame489
                     }
                 case Screen.Main:
                     {
-                        //If the user presses the "P" key while in the main game screen, bring
+                        //If the user presses the "Space" key while in the main game screen, bring
                         //up the Menu options by switching the current state to Menu
-                        if (aKeyboardState.IsKeyDown(Keys.P) == true)
+                        if (aKeyboardState.IsKeyDown(Keys.Space) == true)
                         {
                             mCurrentScreen = Screen.Menu;
                         }
@@ -413,9 +413,9 @@ namespace _2DGame489
                             }
                         }
 
-                        //If the user presses the "X" key, move the state to the 
+                        //If the user presses the "Enter" key, move the state to the 
                         //appropriate game state based on the current selection
-                        if (aKeyboardState.IsKeyDown(Keys.X) == true)
+                        if (aKeyboardState.IsKeyDown(Keys.Enter) == true)
                         {
                             switch (mCurrentMenuOption)
                             {
@@ -443,7 +443,7 @@ namespace _2DGame489
             // Store the Keyboard state
             mPreviousKeyboardState = aKeyboardState;
             
-            // Update scrolling background
+            //Update scrolling background
             //Vector2 speed = new Vector2(0, SCROLL_SPEED);
             //Vector2 dir = new Vector2(0, 1);        //background movement is in Y direction only
             Vector2 distanceTravelled = SCROLL_SPEED * SCROLL_DIR * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -662,7 +662,6 @@ namespace _2DGame489
                 turnToCenterSpeed);
         }
 
-
         /// <summary>
         /// Calculates the angle that an object should face, given its position, its
         /// target's position, its current angle, and its maximum turning speed.
@@ -795,14 +794,12 @@ namespace _2DGame489
                                 {
                                     spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 50, 250, 50), new Rectangle(0, 0, 250, 50), Color.Gold);
                                     spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 100, 250, 50), new Rectangle(0, 50, 250, 50), Color.White);
-                                    //spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 150, 250, 50), new Rectangle(0, 100, 250, 50), Color.White);
                                     break;
                                 }
                             case MenuOptions.ExitGame:
                                 {
                                     spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 50, 250, 50), new Rectangle(0, 0, 250, 50), Color.White);
                                     spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 100, 250, 50), new Rectangle(0, 50, 250, 50), Color.Gold);
-                                    //spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 150, 250, 50), new Rectangle(0, 100, 250, 50), Color.Gold);
                                     break;
                                 }
                         }
