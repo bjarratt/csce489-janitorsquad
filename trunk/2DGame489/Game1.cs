@@ -35,48 +35,51 @@ namespace _2DGame489
         Reticle turretReticle;
         LinkedList<Obstacle> obstacleList;
         LinkedList<Obstacle> recycledObstacles;
+        LinkedList<Enemy> enemyList;
+        LinkedList<Enemy> recycledEnemies;
         Obstacle smallObstacleLoader; // Used to load the first instance of a small obstacle
         Obstacle smallDestroyedObstacleLoader;
+        Enemy enemyLoader;
 
         //enemy object and position info
-        Texture2D tankTexture;
-        Vector2 tankTextureCenter;
-        Vector2 tankPosition;
-        TankAiState tankState = TankAiState.Wander;
-        float tankOrientation;
-        Vector2 tankWanderDirection;
+        Texture2D enemyTexture;
+        Vector2 enemyTextureCenter;
+        Vector2 enemyPosition;
+        EnemyAiState enemyState = EnemyAiState.Wander;
+        float enemyOrientation;
+        Vector2 enemyWanderDirection;
 
         //enums and state info for enemy
         /// <summary>
-        /// TankAiState is used to keep track of what the tank is currently doing.
+        /// EnemyAiState is used to keep track of what the enemy is currently doing.
         /// </summary>
-        enum TankAiState
+        enum EnemyAiState
         {
-            // chasing the cat
+            // chasing the jeep
             Chasing,
-            // the tank has gotten close enough that the cat that it can stop chasing it
+            // the enemy has gotten close enough to the jeep that it can stop chasing it
             Caught,
-            // the tank can't "see" the cat, and is wandering around.
+            // the enemy can't "see" the jeep, and is wandering around.
             Wander
         }
 
-        // how fast can the tank move?
-        const float MaxTankSpeed = 4.0f;
+        // how fast can the enemy move?
+        const float MaxEnemySpeed = 4.0f;
 
         // how fast can he turn?
-        const float TankTurnSpeed = 0.10f;
+        const float EnemyTurnSpeed = 0.10f;
 
-        // this value controls the distance at which the tank will start to chase the
-        // cat.
-        const float TankChaseDistance = 350.0f;
+        // this value controls the distance at which the enemy will start to chase the
+        // jeep.
+        const float EnemyChaseDistance = 350.0f;
 
-        // TankCaughtDistance controls the distance at which the tank will stop because
-        // he has "caught" the cat.
-        const float TankCaughtDistance = 60.0f;
+        // EnemyCaughtDistance controls the distance at which the enemy will stop because
+        // he has "caught" the jeep.
+        const float EnemyCaughtDistance = 60.0f;
 
         // this constant is used to avoid hysteresis, which is common in ai programming.
         // see the doc for more details.
-        const float TankHysteresis = 15.0f;
+        const float EnemyHysteresis = 15.0f;
 
         ExplosionPS explosion;
 
@@ -136,7 +139,6 @@ namespace _2DGame489
 
         Texture2D mTitleScreen;
         Texture2D mMainScreen;
-        //Texture2D mInventoryScreen;
         Texture2D mMenu;
         Texture2D mMenuOptions;
         Texture2D bg;
@@ -175,14 +177,19 @@ namespace _2DGame489
             obstacleList = new LinkedList<Obstacle>();
             recycledObstacles = new LinkedList<Obstacle>();
 
+            enemyList = new LinkedList<Enemy>();
+            recycledEnemies = new LinkedList<Enemy>();
+
             smallObstacleLoader = new Obstacle("obstacle_small");
             smallDestroyedObstacleLoader = new Obstacle("obstacle_small_destroyed");
+
+            enemyLoader = new Enemy("Tank");
 
             randNumGenerator = new Random();
 
             Viewport vp = graphics.GraphicsDevice.Viewport;
 
-            tankPosition = new Vector2(vp.Width / 4, vp.Height / 2);
+            enemyPosition = new Vector2(vp.Width / 4, vp.Height / 2);
 
             base.Initialize();
         }
@@ -199,7 +206,6 @@ namespace _2DGame489
             //add all menu content
             mTitleScreen = Content.Load<Texture2D>("Title");
             mMainScreen = Content.Load<Texture2D>("MainScreen");
-            //mInventoryScreen = Content.Load<Texture2D>("Inventory");
             mMenu = Content.Load<Texture2D>("Menu");
             mMenuOptions = Content.Load<Texture2D>("MenuOptions2");
             bg = Content.Load<Texture2D>("bg");
@@ -213,14 +219,15 @@ namespace _2DGame489
 
             Player1.LoadContent(this.Content);
 
-            tankTexture = Content.Load<Texture2D>("Tank");
-            tankTextureCenter =
-                new Vector2(tankTexture.Width / 2, tankTexture.Height / 2);
+            enemyTexture = Content.Load<Texture2D>("Tank");
+            enemyTextureCenter =
+                new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2);
 
             turretReticle.LoadContent(this.Content);
 
             smallObstacleLoader.LoadContent(this.Content);
             smallDestroyedObstacleLoader.LoadContent(this.Content);
+            enemyLoader.LoadContent(this.Content);
         }
 
         /// <summary>
@@ -346,12 +353,12 @@ namespace _2DGame489
             //Menu screen logic
             KeyboardState aKeyboardState = Keyboard.GetState();
 
-            // UpdateTank will run the AI code that controls the tank's movement...
-            UpdateTank();
+            // UpdateEnemy will run the AI code that controls the enemy's movement...
+            UpdateEnemy();
 
             // Once we've finished that, we'll use the ClampToViewport helper function
-            // to clamp everyone's position so that they stay on the screen.
-            tankPosition = ClampToViewport(tankPosition);
+            // to clamp the enemy's position so that it stays on the screen.
+            enemyPosition = ClampToViewport(enemyPosition);
 
             switch (mCurrentScreen)
             {
@@ -375,17 +382,6 @@ namespace _2DGame489
                         }
                         break;
                     }
-                /*case Screen.Inventory:
-                    {
-                        //If the user presses the "X" key while in the Inventory screen, close
-                        //the inventory screen and resume the game by switching the current state
-                        //to the Main screen
-                        if (aKeyboardState.IsKeyDown(Keys.X) == true && mPreviousKeyboardState.IsKeyDown(Keys.X) == false)
-                        {
-                            mCurrentScreen = Screen.Main;
-                        }
-                        break;
-                    }*/
                 case Screen.Menu:
                     {
                         //Move the currently highlighted menu option 
@@ -400,11 +396,6 @@ namespace _2DGame489
                                         mCurrentMenuOption = MenuOptions.ExitGame;
                                         break;
                                     }
-                                /*case MenuOptions.Inventory:
-                                    {
-                                        mCurrentMenuOption = MenuOptions.ExitGame;
-                                        break;
-                                    }*/
                             }
 
                         }
@@ -414,11 +405,6 @@ namespace _2DGame489
                             //Move selection up
                             switch (mCurrentMenuOption)
                             {
-                                /* case MenuOptions.Inventory:
-                                     {
-                                         mCurrentMenuOption = MenuOptions.Resume;
-                                         break;
-                                     }*/
                                 case MenuOptions.ExitGame:
                                     {
                                         mCurrentMenuOption = MenuOptions.Resume;
@@ -439,12 +425,6 @@ namespace _2DGame489
                                         mCurrentScreen = Screen.Main;
                                         break;
                                     }
-                                //Open the Inventory screen
-                                /*&case MenuOptions.Inventory:
-                                    {
-                                        mCurrentScreen = Screen.Inventory;
-                                        break;
-                                    }*/
                                 //Exit the game
                                 case MenuOptions.ExitGame:
                                     {
@@ -492,7 +472,6 @@ namespace _2DGame489
                 this.previousY += distanceTravelled.Y;
             }
 
-
             //these if-statements shuffle the pictures as they go out of view
             if (myBackground2.Position.Y > MAX_WINY)
                 myBackground2.Position.Y = -myBackground2.Size.Height;
@@ -509,7 +488,7 @@ namespace _2DGame489
             base.Update(gameTime);
         }
 
-        //helps the tank stay on the screen
+        //helps the enemy stay on the screen
         private Vector2 ClampToViewport(Vector2 vector)
         {
             Viewport vp = graphics.GraphicsDevice.Viewport;
@@ -519,100 +498,94 @@ namespace _2DGame489
         }
 
         /// <summary>
-        /// UpdateTank runs the AI code that will update the tank's orientation and
-        /// position. It is very similar to UpdateMouse, but is slightly more
-        /// complicated: where mouse only has two states, idle and active, the Tank has
-        /// three.
+        /// UpdateEnemy runs the AI code that will update the enemy's orientation and
+        /// position. The enemy has three states: chase, caught and idle.
         /// </summary>
-        private void UpdateTank()
+        private void UpdateEnemy()
         {
-            // However, the tank's behavior is more complicated than the mouse's, and so
-            // the decision making process is a little different. 
-
+     
             // First we have to use the current state to decide what the thresholds are
             // for changing state, as described in the doc.
 
-            float tankChaseThreshold = TankChaseDistance;
-            float tankCaughtThreshold = TankCaughtDistance;
-            // if the tank is idle, he prefers to stay idle. we do this by making the
-            // chase distance smaller, so the tank will be less likely to begin chasing
-            // the cat.
-            if (tankState == TankAiState.Wander)
+            float enemyChaseThreshold = EnemyChaseDistance;
+            float enemyCaughtThreshold = EnemyCaughtDistance;
+            // if the enemy is idle, he prefers to stay idle. we do this by making the
+            // chase distance smaller, so the enemy will be less likely to begin chasing
+            // the jeep.
+            if (enemyState == EnemyAiState.Wander)
             {
-                tankChaseThreshold -= TankHysteresis / 2;
+                enemyChaseThreshold -= EnemyHysteresis / 2;
             }
-            // similarly, if the tank is active, he prefers to stay active. we
+            // similarly, if the enemy is active, he prefers to stay active. we
             // accomplish this by increasing the range of values that will cause the
-            // tank to go into the active state.
-            else if (tankState == TankAiState.Chasing)
+            // enemy to go into the active state.
+            else if (enemyState == EnemyAiState.Chasing)
             {
-                tankChaseThreshold += TankHysteresis / 2;
-                tankCaughtThreshold -= TankHysteresis / 2;
+                enemyChaseThreshold += EnemyHysteresis / 2;
+                enemyCaughtThreshold -= EnemyHysteresis / 2;
             }
             // the same logic is applied to the finished state.
-            else if (tankState == TankAiState.Caught)
+            else if (enemyState == EnemyAiState.Caught)
             {
-                tankCaughtThreshold += TankHysteresis / 2;
+                enemyCaughtThreshold += EnemyHysteresis / 2;
             }
 
-            // Second, now that we know what the thresholds are, we compare the tank's 
-            // distance from the cat against the thresholds to decide what the tank's
+            // Second, now that we know what the thresholds are, we compare the enemy's 
+            // distance from the jeep against the thresholds to decide what the enemy's
             // current state is.
-            float distanceFromCat = Vector2.Distance(tankPosition, Player1.Position);
-            if (distanceFromCat > tankChaseThreshold)
+            float distanceFromJeep = Vector2.Distance(enemyPosition, Player1.Position);
+            if (distanceFromJeep > enemyChaseThreshold)
             {
-                // just like the mouse, if the tank is far away from the cat, it should
-                // idle.
-                tankState = TankAiState.Wander;
+                // if the enemy is far away from the jeep, it should idle
+                enemyState = EnemyAiState.Wander;
             }
-            else if (distanceFromCat > tankCaughtThreshold)
+            else if (distanceFromJeep > enemyCaughtThreshold)
             {
-                tankState = TankAiState.Chasing;
+                enemyState = EnemyAiState.Chasing;
             }
             else
             {
-                tankState = TankAiState.Caught;
+                enemyState = EnemyAiState.Caught;
             }
 
             // Third, once we know what state we're in, act on that state.
-            float currentTankSpeed;
-            if (tankState == TankAiState.Chasing)
+            float currentEnemySpeed;
+            if (enemyState == EnemyAiState.Chasing)
             {
-                // the tank wants to chase the cat, so it will just use the TurnToFace
-                // function to turn towards the cat's position. Then, when the tank
-                // moves forward, he will chase the cat.
-                tankOrientation = TurnToFace(tankPosition, Player1.Position, tankOrientation,
-                    TankTurnSpeed);
-                currentTankSpeed = MaxTankSpeed;
+                // the enemy wants to chase the jeep, so it will just use the TurnToFace
+                // function to turn towards the jeep's position. Then, when the enemy
+                // moves forward, he will chase the jeep.
+                enemyOrientation = TurnToFace(enemyPosition, Player1.Position, enemyOrientation,
+                    EnemyTurnSpeed);
+                currentEnemySpeed = MaxEnemySpeed;
             }
-            else if (tankState == TankAiState.Wander)
+            else if (enemyState == EnemyAiState.Wander)
             {
-                // wander works just like the mouse's.
-                Wander(tankPosition, ref tankWanderDirection, ref tankOrientation,
-                    TankTurnSpeed);
-                currentTankSpeed = .25f * MaxTankSpeed;
+                // call the wander function for the enemy
+                Wander(enemyPosition, ref enemyWanderDirection, ref enemyOrientation,
+                    EnemyTurnSpeed);
+                currentEnemySpeed = .25f * MaxEnemySpeed;
             }
             else
             {
-                // this part is different from the mouse. if the tank catches the cat, 
-                // it should stop. otherwise it will run right by, then spin around and
+                // if the enemy catches the jeep, it should stop.
+                // Otherwise it will run right by, then spin around and
                 // try to catch it all over again. The end result is that it will kind
-                // of "run laps" around the cat, which looks funny, but is not what
+                // of "run laps" around the jeep, which looks funny, but is not what
                 // we're after.
-                currentTankSpeed = 0.0f;
+                currentEnemySpeed = 0.0f;
             }
 
-            // this calculation is also just like the mouse's: we construct a heading
-            // vector based on the tank's orientation, and then make the tank move along
+            // this calculation is also important; we construct a heading
+            // vector based on the enemy's orientation, and then make the enemy move along
             // that heading.
             Vector2 heading = new Vector2(
-                (float)Math.Cos(tankOrientation), (float)Math.Sin(tankOrientation));
-            tankPosition += heading * currentTankSpeed;
+                (float)Math.Cos(enemyOrientation), (float)Math.Sin(enemyOrientation));
+            enemyPosition += heading * currentEnemySpeed;
         }
 
         /// <summary>
-        /// Wander contains functionality that is shared between both the mouse and the
-        /// tank, and does just what its name implies: makes them wander around the
+        /// Wander contains functionality for the enemy, and does just what its name implies: makes them wander around the
         /// screen. The specifics of the function are described in more detail in the
         /// accompanying doc.
         /// </summary>
@@ -789,9 +762,9 @@ namespace _2DGame489
                         myBackground.Draw(this.spriteBatch);
                         myBackground2.Draw(this.spriteBatch);
 
-                        // draw the tank
-                        spriteBatch.Draw(tankTexture, tankPosition, null, Color.White,
-                            tankOrientation, tankTextureCenter, 1.0f, SpriteEffects.None, 0.0f);
+                        // draw the enemy
+                        spriteBatch.Draw(enemyTexture, enemyPosition, null, Color.White,
+                            enemyOrientation, enemyTextureCenter, 1.0f, SpriteEffects.None, 0.0f);
 
                         // Draw obstacles
                         LinkedListNode<Obstacle> obstacleListNode = obstacleList.First;
@@ -825,15 +798,6 @@ namespace _2DGame489
                                     //spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 150, 250, 50), new Rectangle(0, 100, 250, 50), Color.White);
                                     break;
                                 }
-
-                            /*case MenuOptions.Inventory:
-                                {
-                                    spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 50, 250, 50), new Rectangle(0, 0, 250, 50), Color.White);
-                                    spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 100, 250, 50), new Rectangle(0, 50, 250, 50), Color.Gold);
-                                    spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 150, 250, 50), new Rectangle(0, 100, 250, 50), Color.White);
-                                    break;
-                                }*/
-
                             case MenuOptions.ExitGame:
                                 {
                                     spriteBatch.Draw(mMenuOptions, new Rectangle(this.Window.ClientBounds.Width / 2 - 100, this.Window.ClientBounds.Height / 2 - mMenu.Height / 2 + 50, 250, 50), new Rectangle(0, 0, 250, 50), Color.White);
@@ -844,12 +808,6 @@ namespace _2DGame489
                         }
                         break;
                     }
-
-                /*case Screen.Inventory:
-                    {
-                        spriteBatch.Draw(mInventoryScreen, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
-                        break;
-                    }*/
             }
 
             spriteBatch.End();
