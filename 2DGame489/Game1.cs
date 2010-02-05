@@ -93,8 +93,11 @@ namespace _2DGame489
 
         private const double OBSTACLE_PLACEMENT_ODDS = 0.015;
         private const double OBSTACLE_ROCK_ODDS = 0.80;
+        private const double ENEMY_PLACEMENT_ODDS = 0.005;
+        private const double ENEMY_DINO1_ODDS = 0.80;
         //private const double OBSTACLE_POND_ODDS = 0.25;
         private const double OBSTACLE_LOG_ODDS = 0.20;
+        private const double ENEMY_DINO2_ODDS = 0.20;
 
         #region Random Numbers and Helper functions
         private static Random random = new Random();    //Particle random number generator
@@ -275,6 +278,42 @@ namespace _2DGame489
             }
         }
 
+        /*protected void generateNewEnemies(float yVal)
+        {
+            //obstacleList.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
+            double randomNum;
+
+            for (int i = 0; i < MAX_WINX / UNIT_OBSTACLE_WIDTH; i++)
+            {
+                randomNum = randNumGenerator.NextDouble();
+                if (randomNum < ENEMY_PLACEMENT_ODDS)
+                {
+                    LinkedListNode<Enemy> enemyNode;
+                    if (recycledObstacles.Count == 0)
+                    {
+                        enemyNode = new LinkedListNode<Enemy>(new Enemy("Tank"));
+                    }
+                    else
+                    {
+                        enemyNode = recycledEnemies.First;
+                        recycledObstacles.RemoveFirst();
+                        enemyNode.Value.AssetName = "Tank";
+                    }
+
+                    if (randomNum < ENEMY_DINO2_ODDS * ENEMY_PLACEMENT_ODDS)
+                    {
+                        enemyNode.Value.AssetName = "obstacle_log";
+                        i++;
+                    }
+
+                    enemyNode.Value.Position.X = i * UNIT_OBSTACLE_WIDTH;
+                    enemyNode.Value.Position.Y = yVal;
+                    enemyNode.Value.LoadContent(this.Content);
+                    enemyList.AddLast(enemyNode);
+                }
+            }
+        }*/
+
         // Recycle any obstacles that are no longer in view
         protected void garbageCollectObstacles()
         {
@@ -295,6 +334,27 @@ namespace _2DGame489
                 }
             }
         }
+
+        /*// Recycle any enemies that are no longer in view
+        protected void garbageCollectEnemies()
+        {
+            LinkedListNode<Enemy> enemyListNode = enemyList.First;
+            LinkedListNode<Enemy> nextNode = null;
+            while (enemyListNode != null)
+            {
+                if (enemyListNode.Value.Position.Y > MAX_WINY)
+                {
+                    nextNode = enemyListNode.Next;
+                    enemyList.Remove(enemyListNode);
+                    recycledEnemies.AddLast(enemyListNode);
+                    enemyListNode = nextNode;
+                }
+                else
+                {
+                    enemyListNode = enemyListNode.Next;
+                }
+            }
+        }*/
 
         // Tests collisions between the jeep and other in-game elements
         protected void processObstacleCollisions()
@@ -336,6 +396,47 @@ namespace _2DGame489
                 obstacleMatrixNode = nextNode;
             }
         }
+
+       /* // Tests collisions between the jeep and other in-game elements
+        protected void processEnemyCollisions()
+        {
+            // Update enemies based on scrolling background
+            LinkedListNode<Enemy> enemyMatrixNode = enemyList.First;
+            LinkedListNode<Enemy> nextNode = null;
+            while (enemyMatrixNode != null)
+            {
+                Enemy currentEn = enemyMatrixNode.Value;
+                nextNode = enemyMatrixNode.Next;
+                //boundingBox1 = new Rectangle((int)Player1.Position.X, (int)Player1.Position.Y, Player1.Source.Width, Player1.Source.Height);
+                boundingBox1.X = (int)Player1.Position.X;
+                boundingBox1.Y = (int)Player1.Position.Y;
+                boundingBox1.Width = Player1.Source.Width;
+                boundingBox1.Height = Player1.Source.Height;
+                //boundingBox2 = new Rectangle((int)currentEn.Position.X, (int)currentEn.Position.Y, currentEn.Source.Width, currentEn.Source.Height);
+                boundingBox2.X = (int)currentEn.Position.X;
+                boundingBox2.Y = (int)currentEn.Position.Y;
+                boundingBox2.Width = currentEn.Source.Width;
+                boundingBox2.Height = currentEn.Source.Height;
+
+                if (boundingBox1.Intersects(boundingBox2)) // Jeep collided with an enemy
+                {
+                    //Enemy en = new Enemy("Tank");
+                    //currentEn.AssetName = "dead_dino";
+                    //currentEn.LoadContent(this.Content);
+                    enemyList.Remove(enemyMatrixNode);
+                    recycledEnemies.AddLast(enemyMatrixNode);
+
+                    // TODO: Put damage updating function call here
+
+                    //make big explosion
+                    //Vector2 where;
+                    //where.X = currentEn.Position.X + currentEn.Source.Width / 2;
+                    //where.Y = currentEn.Position.Y + currentEn.Source.Height / 2;
+                   // explosion.AddParticles(where);
+                }
+                enemyMatrixNode = nextNode;
+            }
+        }*/
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -453,6 +554,9 @@ namespace _2DGame489
             // Perform garbage collection on obstacles
             garbageCollectObstacles();
 
+            /*// Perform garbage collection on enemies
+            garbageCollectEnemies();*/
+
             // Update obstacles based on scrolling background
             LinkedListNode<Obstacle> obstacleListNode = obstacleList.First;
             while (obstacleListNode != null)
@@ -472,6 +576,25 @@ namespace _2DGame489
                 this.previousY += distanceTravelled.Y;
             }
 
+            /*// Update enemies based on scrolling background
+            LinkedListNode<Enemy> enemyListNode = enemyList.First;
+            while (enemyListNode != null)
+            {
+                enemyListNode.Value.Position += distanceTravelled;
+                enemyListNode = enemyListNode.Next;
+            }
+
+            // Create a new row of enemies if needed
+            if ((this.previousY + distanceTravelled.Y) >= UNIT_OBSTACLE_HEIGHT)
+            {
+                this.previousY = (this.previousY + distanceTravelled.Y) % UNIT_OBSTACLE_HEIGHT;
+                generateNewRow(this.previousY - UNIT_OBSTACLE_HEIGHT);
+            }
+            else
+            {
+                this.previousY += distanceTravelled.Y;
+            }*/
+
             //these if-statements shuffle the pictures as they go out of view
             if (myBackground2.Position.Y > MAX_WINY)
                 myBackground2.Position.Y = -myBackground2.Size.Height;
@@ -483,9 +606,15 @@ namespace _2DGame489
             // Perform collision detection
             processObstacleCollisions();
 
+            /*//Perform collision detection
+            processEnemyCollisions(); */
+            
             turretReticle.Update(gameTime);
 
-            base.Update(gameTime);
+            if (mCurrentScreen == Screen.Main)
+            {
+                base.Update(gameTime);
+            }
         }
 
         //helps the enemy stay on the screen
@@ -764,6 +893,15 @@ namespace _2DGame489
                         // draw the enemy
                         spriteBatch.Draw(enemyTexture, enemyPosition, null, Color.White,
                             enemyOrientation, enemyTextureCenter, 1.0f, SpriteEffects.None, 0.0f);
+                        
+
+                        /*// Draw enemies
+                        LinkedListNode<Enemy> enemyListNode = enemyList.First;
+                        while (enemyListNode != null)
+                        {
+                            enemyListNode.Value.Draw(this.spriteBatch);
+                            enemyListNode = enemyListNode.Next;
+                        } */
 
                         // Draw obstacles
                         LinkedListNode<Obstacle> obstacleListNode = obstacleList.First;
