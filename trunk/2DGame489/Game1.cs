@@ -212,7 +212,7 @@ namespace _2DGame489
             smallObstacleLoader = new Obstacle("obstacle_small");
             smallDestroyedObstacleLoader = new Obstacle("obstacle_small_destroyed");
 
-            enemyLoader = new Enemy("Tank");
+            enemyLoader = new Enemy("raptor");
 
             randNumGenerator = new Random();
 
@@ -254,7 +254,7 @@ namespace _2DGame489
             tankTextureCenter =
                 new Vector2(tankTexture.Width / 2, tankTexture.Height / 2);*/
 
-            enemyTexture = Content.Load<Texture2D>("Tank");
+            enemyTexture = Content.Load<Texture2D>("raptor");
             enemyTextureCenter =
                 new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2);
 
