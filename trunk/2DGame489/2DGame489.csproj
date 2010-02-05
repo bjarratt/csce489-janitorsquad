@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bullet.cs" />
+    <Compile Include="Enemy.cs" />
     <Compile Include="ExplosionPS.cs" />
     <Compile Include="Jeep.cs" />
     <Compile Include="Obstacle.cs" />
