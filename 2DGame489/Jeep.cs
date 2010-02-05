@@ -17,19 +17,26 @@ namespace _2DGame489
         const int START_POS_X = 400;    //Player starting position
         const int START_POS_Y = 450;
         const int JEEP_SPEED = 350;     //speed constant
+        const float PUFF_TIME = 0.01f;
         const int UP = -1;
         const int DOWN = 1;
         const int RIGHT = 1;
         const int LEFT = -1;
         float firing_rate = 0;  //used for continuous but regulated fire from turret machine gun
+        float time_between_puffs = PUFF_TIME;
 
         private Vector2 BULLET_DIRECTION = Vector2.Zero;
-        private Vector2 BULLET_SPEED = new Vector2(1000, 1000);
+        private Vector2 BULLET_SPEED = new Vector2(1500, 1500);
         
         List<Bullet> bullets = new List<Bullet>();  //bullets for the turret
         ContentManager mContentManager;     //will be used to create new bullets when we need them
 
         Turret Jeep_Turret = new Turret();  //gun turret for jeep
+
+        //Muzzle Flash particle effect reference from main Game1 class
+        public MuzzleFlashPS muzz;
+        public DirtCloudPS dirt_cloud;
+        public GrassPS grass;
 
         const int TURRET_POS_X = 34;
         const int TURRET_POS_Y = 110;
@@ -56,19 +63,7 @@ namespace _2DGame489
         Vector2 direction = Vector2.Zero;   //init jeep direction to zero
 
         //jeep health variables/methods
-        public int CurrentHealth
-        {
-            get { return currentHealth; }
-            set { currentHealth = maxHealth; }
-        }
-        int currentHealth;
-        //total health
-        public int MaxHealth
-        {
-            get { return maxHealth; }
-            set { maxHealth = 3; }
-        }
-        int maxHealth;
+        public float Jeep_health = 100;
 
         KeyboardState previous_keyboard_state;  //save the previous keyboard state
         GamePadState previous_gamepad_state;    //save the previous gamepad state
@@ -112,6 +107,7 @@ namespace _2DGame489
             UpdateMovement(current_key_state, current_gamepad_state);   //update the player movement
             UpdateBullet(theGameTime, current_key_state, current_gamepad_state, current_mouse_state);    //update bullet movements
             UpdateTurret(Position, speed, direction, theGameTime, current_key_state, current_gamepad_state, current_mouse_state);   //update turret
+            UpdateDirt((float)theGameTime.ElapsedGameTime.TotalSeconds);
 
             previous_keyboard_state = current_key_state;    //store previous states
             previous_gamepad_state = current_gamepad_state;
@@ -209,12 +205,12 @@ namespace _2DGame489
             }
             float time = (float)theGameTime.ElapsedGameTime.TotalSeconds;
             firing_rate += time;
-            if (theGPState.ThumbSticks.Right != Vector2.Zero && firing_rate > 0.2)  //0.2 controls firing rate... only shoot a bullet if
+            if (theGPState.ThumbSticks.Right != Vector2.Zero && firing_rate > 0.15)  //0.2 controls firing rate... only shoot a bullet if
             {                                                                       //time elapsed greater than 0.2 seconds
                 ShootBullet(theGPState, theMouseState);
                 firing_rate = 0.0f;
             }
-            else if (theMouseState.LeftButton == ButtonState.Pressed && firing_rate > 0.2)
+            else if (theMouseState.LeftButton == ButtonState.Pressed && firing_rate > 0.15)
             {
                 ShootBullet(theGPState, theMouseState);
                 firing_rate = 0.0f;
@@ -234,23 +230,26 @@ namespace _2DGame489
                         aCreateNew = false;     //set creation flag to false
                         if (theGPState.ThumbSticks.Right != Vector2.Zero)
                         {
-                            //Vector2 dir = new Vector2(theGPState.ThumbSticks.Right.X, -theGPState.ThumbSticks.Right.Y);
+                            Vector2 dir = new Vector2(theGPState.ThumbSticks.Right.X, -theGPState.ThumbSticks.Right.Y);
                             BULLET_DIRECTION.X = theGPState.ThumbSticks.Right.X;
                             BULLET_DIRECTION.Y = -theGPState.ThumbSticks.Right.Y;
                             BULLET_DIRECTION.Normalize();    //normalize so all bullets fly at same speed
-                            aBullet.Fire(theGPState, theMouseState, this.Position + new Vector2(TURRET_POS_X, TURRET_POS_Y),
+                            aBullet.Fire(theGPState, theMouseState, this.Position + new Vector2(TURRET_POS_X, TURRET_POS_Y) + dir*75,
                                 BULLET_SPEED, BULLET_DIRECTION);    //(1000,1000) is bullet speed...completely arbitrary
+                            muzz.AddParticles(this.Position + new Vector2(TURRET_POS_X, TURRET_POS_Y) + dir * 80);
                         }
                         else                  //using mouse rather than gamepad
                         {
                             BULLET_DIRECTION.X = theMouseState.X - (Position.X + TURRET_POS_X);
                             BULLET_DIRECTION.Y = theMouseState.Y - (Position.Y + TURRET_POS_Y);
-                            //Vector2 dir = new Vector2(theMouseState.X - (Position.X + TURRET_POS_X), (theMouseState.Y - (Position.Y + TURRET_POS_Y)));
+                            Vector2 dir = new Vector2(theMouseState.X - (Position.X + TURRET_POS_X), (theMouseState.Y - (Position.Y + TURRET_POS_Y)));
                             BULLET_DIRECTION.Normalize();
-                            aBullet.Fire(theGPState, theMouseState, this.Position + new Vector2(TURRET_POS_X,TURRET_POS_Y),// + dir, //Position + new Vector2(Size.Width / 2, Size.Height / 2) + dir * 30,
+                            dir.Normalize();
+                            aBullet.Fire(theGPState, theMouseState, this.Position + new Vector2(TURRET_POS_X,TURRET_POS_Y) + dir*75,// + dir, //Position + new Vector2(Size.Width / 2, Size.Height / 2) + dir * 30,
                                 BULLET_SPEED, BULLET_DIRECTION);
                             //aBullet.Fire(theGPState, theMouseState, Position + new Vector2(TURRET_POS_X, TURRET_POS_Y) + dir * 30,
                             //    new Vector2(1000, 1000), dir);
+                            muzz.AddParticles(this.Position + new Vector2(TURRET_POS_X, TURRET_POS_Y) + dir * 80);
                         }
                         break;
                     }
@@ -262,24 +261,27 @@ namespace _2DGame489
                     aBullet.LoadContent(mContentManager);
                     if (theGPState.ThumbSticks.Right != Vector2.Zero)
                     {
-                        //Vector2 dir = new Vector2(theGPState.ThumbSticks.Right.X, -theGPState.ThumbSticks.Right.Y);
+                        Vector2 dir = new Vector2(theGPState.ThumbSticks.Right.X, -theGPState.ThumbSticks.Right.Y);
                         BULLET_DIRECTION.X = theGPState.ThumbSticks.Right.X;
                         BULLET_DIRECTION.Y = -theGPState.ThumbSticks.Right.Y;
                         BULLET_DIRECTION.Normalize();
-                        aBullet.Fire(theGPState, theMouseState, this.Position + new Vector2(TURRET_POS_X, TURRET_POS_Y),
+                        aBullet.Fire(theGPState, theMouseState, this.Position + new Vector2(TURRET_POS_X, TURRET_POS_Y) + dir*75,
                             BULLET_SPEED, BULLET_DIRECTION);
+                        muzz.AddParticles(this.Position + new Vector2(TURRET_POS_X, TURRET_POS_Y) + dir * 80);
                         
                     }
                     else               //using mouse
                     {
                         BULLET_DIRECTION.X = theMouseState.X - (Position.X + TURRET_POS_X);
                         BULLET_DIRECTION.Y = theMouseState.Y - (Position.Y + TURRET_POS_Y);
-                        //Vector2 dir = new Vector2(theMouseState.X - (Position.X + TURRET_POS_X), (theMouseState.Y - (Position.Y + TURRET_POS_Y)));
+                        Vector2 dir = new Vector2(theMouseState.X - (Position.X + TURRET_POS_X), (theMouseState.Y - (Position.Y + TURRET_POS_Y)));
                         BULLET_DIRECTION.Normalize();
-                        aBullet.Fire(theGPState, theMouseState, this.Position + new Vector2(TURRET_POS_X, TURRET_POS_Y),// + dir, //Position + new Vector2(Size.Width / 2, Size.Height / 2) + dir * 30,
+                        dir.Normalize();
+                        aBullet.Fire(theGPState, theMouseState, this.Position + new Vector2(TURRET_POS_X, TURRET_POS_Y) + dir*75,// + dir, //Position + new Vector2(Size.Width / 2, Size.Height / 2) + dir * 30,
                                 BULLET_SPEED, BULLET_DIRECTION);
                         //aBullet.Fire(theGPState, theMouseState, Position + new Vector2(TURRET_POS_X, TURRET_POS_Y) + dir * 30,
                         //    new Vector2(1000, 1000), dir);
+                        muzz.AddParticles(this.Position + new Vector2(TURRET_POS_X, TURRET_POS_Y) + dir * 80);
                     }
                     bullets.Add(aBullet);   //add the new bullet to the list
                 }
@@ -308,6 +310,21 @@ namespace _2DGame489
             else
             {
                Jeep_Turret.RotateTurret(pos, speed, direction, theGameTime, gamepad_state, key_state, mouse_state);
+            }
+        }
+
+        private void UpdateDirt(float dt)
+        {
+            time_between_puffs -= dt;
+            if (time_between_puffs < 0)
+            {
+                Vector2 where = Vector2.Zero;
+                where.X = this.Position.X + this.Size.Width * 0.5f;
+                where.Y = this.Position.Y + this.Size.Height;
+                if (where.X >= 340 && where.X <= 430)
+                    dirt_cloud.AddParticles(where);
+                else grass.AddParticles(where);
+                time_between_puffs = PUFF_TIME;
             }
         }
 

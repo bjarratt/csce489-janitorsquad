@@ -33,6 +33,7 @@ namespace _2DGame489
         Sprite myBackground2;
         Jeep Player1;
         Reticle turretReticle;
+
         LinkedList<Obstacle> obstacleList;
         LinkedList<Obstacle> recycledObstacles;
         LinkedList<Enemy> enemyList;
@@ -40,6 +41,8 @@ namespace _2DGame489
         Obstacle smallObstacleLoader; // Used to load the first instance of a small obstacle
         Obstacle smallDestroyedObstacleLoader;
         Enemy enemyLoader;
+
+        HealthBar HBar;
 
         //enemy object and position info
         Texture2D enemyTexture;
@@ -82,6 +85,10 @@ namespace _2DGame489
         const float EnemyHysteresis = 15.0f;
 
         ExplosionPS explosion;
+        ExplosionSmokePS explosion_smoke;
+        MuzzleFlashPS muzzleflash;
+        DirtCloudPS dirt;
+        GrassPS grass;
 
         // Used for collision detection
         private Rectangle boundingBox1;
@@ -121,7 +128,7 @@ namespace _2DGame489
 
         private Vector2 SCROLL_SPEED = new Vector2(0, 350);
         private Vector2 SCROLL_DIR = new Vector2(0, 1);
-
+        
         //screen management elements
         private enum Screen
         {
@@ -154,9 +161,21 @@ namespace _2DGame489
             Content.RootDirectory = "Content";
 
             // create the particle systems and add them to the components list.
-            // we should never see more than four explosions at once
+            // 
             explosion = new ExplosionPS(this, 2);
             Components.Add(explosion);
+
+            explosion_smoke = new ExplosionSmokePS(this, 1);
+            Components.Add(explosion_smoke);
+
+            muzzleflash = new MuzzleFlashPS(this, 1);
+            Components.Add(muzzleflash);
+
+            dirt = new DirtCloudPS(this, 1);
+            Components.Add(dirt);
+
+            grass = new GrassPS(this, 1);
+            Components.Add(grass);
         }
 
         /// <summary>
@@ -171,7 +190,13 @@ namespace _2DGame489
             myBackground2 = new Sprite();
 
             Player1 = new Jeep();
+            //give the Jeep a reference to the muzzleflash component
+            Player1.muzz = muzzleflash;
+            Player1.dirt_cloud = dirt;
+            Player1.grass = grass;
             //Player1.Scale = 0.5f;
+
+            HBar = new HealthBar(this, Player1);
 
             turretReticle = new Reticle();
 
@@ -221,6 +246,12 @@ namespace _2DGame489
             myBackground2.Position = new Vector2(0, myBackground2.Position.Y - myBackground2.Size.Height);
 
             Player1.LoadContent(this.Content);
+
+            HBar.LoadContent(this.Content); 
+
+            /*tankTexture = Content.Load<Texture2D>("Tank");
+            tankTextureCenter =
+                new Vector2(tankTexture.Width / 2, tankTexture.Height / 2);*/
 
             enemyTexture = Content.Load<Texture2D>("Tank");
             enemyTextureCenter =
@@ -357,7 +388,7 @@ namespace _2DGame489
         }*/
 
         // Tests collisions between the jeep and other in-game elements
-        protected void processObstacleCollisions()
+        protected void processObstacleCollisions(GameTime theGameTime)
         {
             // Update obstacles based on scrolling background
             LinkedListNode<Obstacle> obstacleMatrixNode = obstacleList.First;
@@ -386,12 +417,15 @@ namespace _2DGame489
                     recycledObstacles.AddLast(obstacleMatrixNode);
 
                     // TODO: Put damage updating function call here
+                    Player1.Jeep_health -= 10;
+                    Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
 
                     //make big explosion
                     Vector2 where;
                     where.X = currentOb.Position.X + currentOb.Source.Width / 2;
                     where.Y = currentOb.Position.Y + currentOb.Source.Height / 2;
                     explosion.AddParticles(where);
+                    explosion_smoke.AddParticles(where);
                 }
                 obstacleMatrixNode = nextNode;
             }
@@ -450,12 +484,15 @@ namespace _2DGame489
                 this.Exit();
             if (Keyboard.GetState(PlayerIndex.One).IsKeyDown(Keys.Escape))
                 this.Exit();
-
+            
             //Menu screen logic
             KeyboardState aKeyboardState = Keyboard.GetState();
 
             // UpdateEnemy will run the AI code that controls the enemy's movement...
             UpdateEnemy();
+
+            //Update Health Bar
+            HBar.Update(gameTime);
 
             // Once we've finished that, we'll use the ClampToViewport helper function
             // to clamp the enemy's position so that it stays on the screen.
@@ -471,6 +508,8 @@ namespace _2DGame489
                         {
                             mCurrentScreen = Screen.Main;
                         }
+                        else if (GamePad.GetState(PlayerIndex.One).Buttons.X == ButtonState.Pressed)
+                            mCurrentScreen = Screen.Main;
                         break;
                     }
                 case Screen.Main:
@@ -604,7 +643,7 @@ namespace _2DGame489
             Player1.Update(gameTime);
 
             // Perform collision detection
-            processObstacleCollisions();
+            processObstacleCollisions(gameTime);
 
             /*//Perform collision detection
             processEnemyCollisions(); */
@@ -915,6 +954,8 @@ namespace _2DGame489
                         Player1.Draw(this.spriteBatch);
 
                         turretReticle.Draw(this.spriteBatch);
+
+                        HBar.Draw(this.spriteBatch);
 
                         break;
                     }

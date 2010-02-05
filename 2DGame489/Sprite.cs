@@ -52,7 +52,7 @@ namespace _2DGame489
         public Vector2 Position = new Vector2(0, 0);
 
         //The texture object used when drawing the sprite
-        private Texture2D mSpriteTexture;
+        public Texture2D mSpriteTexture;
 
         //Load the texture for the sprite using the Content Pipeline
         public void LoadContent(ContentManager theContentManager, string theAssetName)

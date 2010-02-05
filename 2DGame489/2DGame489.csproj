@@ -86,8 +86,13 @@
   <ItemGroup>
     <Compile Include="Bullet.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="DirtCloudPS.cs" />
     <Compile Include="ExplosionPS.cs" />
+    <Compile Include="ExplosionSmokePS.cs" />
+    <Compile Include="GrassPS.cs" />
+    <Compile Include="HealthBar.cs" />
     <Compile Include="Jeep.cs" />
+    <Compile Include="MuzzleFlashPS.cs" />
     <Compile Include="Obstacle.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleSystem.cs" />

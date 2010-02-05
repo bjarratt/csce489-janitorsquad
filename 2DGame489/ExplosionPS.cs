@@ -13,11 +13,11 @@ namespace _2DGame489
         public ExplosionPS(Game1 game, int howManyEffects)
             : base(game, howManyEffects)
         {
+            base.scroll_speed = 200;
         }
 
         /// <summary>
-        /// Set up the constants that will give this particle system its behavior and
-        /// properties.
+        /// Set up the constants
         /// </summary>
         protected override void InitializeConstants()
         {
@@ -56,16 +56,6 @@ namespace _2DGame489
         {
             base.InitializeParticle(p, where);
             
-            // The base works fine except for acceleration. Explosions move outwards,
-            // then slow down and stop because of air resistance. Let's change
-            // acceleration so that when the particle is at max lifetime, the velocity
-            // will be zero.
-
-            // We'll use the equation vt = v0 + (a0 * t). (If you're not familar with
-            // this, it's one of the basic kinematics equations for constant
-            // acceleration, and basically says:
-            // velocity at time t = initial velocity + acceleration * t)
-            // We'll solve the equation for a0, using t = p.Lifetime and vt = 0.
             p.Acceleration = -p.Velocity / p.Lifetime;
         }
     }
