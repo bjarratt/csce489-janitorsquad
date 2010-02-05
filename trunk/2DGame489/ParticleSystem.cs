@@ -42,6 +42,9 @@ namespace _2DGame489
         // being used by an effect. when a new effect is requested, particles are taken
         // from this queue. when particles are finished they are put onto this queue.
         Queue<Particle> freeParticles;
+
+        // scroll speed of the effect
+        public int scroll_speed;
         /// <summary>
         /// returns the number of particles that are available for a new effect.
         /// </summary>
@@ -290,7 +293,7 @@ namespace _2DGame489
                 if (p.Active)
                 {
                     // ... and if they're active, update them.
-                    p.Update(dt);
+                    p.Update(dt, scroll_speed);
                     // if that update finishes them, put them onto the free particles
                     // queue.
                     if (!p.Active)

@@ -88,12 +88,12 @@ namespace _2DGame489
 
         // update is called by the ParticleSystem on every frame. This is where the
         // particle's position and that kind of thing get updated.
-        public void Update(float dt)
+        public void Update(float dt, int scroll_sp)
         {
             Velocity += Acceleration * dt;
             Position += Velocity * dt;
             //move the effect with scrolling environment
-            Position.Y += dt * 200;
+            Position.Y += dt * scroll_sp;
 
             Rotation += RotationSpeed * dt;
 
