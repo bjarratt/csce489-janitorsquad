@@ -100,10 +100,11 @@ namespace _2DGame489
 
         private const double OBSTACLE_PLACEMENT_ODDS = 0.015;
         private const double OBSTACLE_ROCK_ODDS = 0.80;
-        private const double ENEMY_PLACEMENT_ODDS = 0.005;
-        private const double ENEMY_DINO1_ODDS = 0.80;
         //private const double OBSTACLE_POND_ODDS = 0.25;
         private const double OBSTACLE_LOG_ODDS = 0.20;
+
+        private const double ENEMY_PLACEMENT_ODDS = 0.005;
+        private const double ENEMY_DINO1_ODDS = 0.80;
         private const double ENEMY_DINO2_ODDS = 0.20;
 
         #region Random Numbers and Helper functions
