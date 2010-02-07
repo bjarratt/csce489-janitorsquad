@@ -205,12 +205,12 @@ namespace _2DGame489
             }
             float time = (float)theGameTime.ElapsedGameTime.TotalSeconds;
             firing_rate += time;
-            if (theGPState.ThumbSticks.Right != Vector2.Zero && firing_rate > 0.15)  //0.2 controls firing rate... only shoot a bullet if
+            if (theGPState.ThumbSticks.Right != Vector2.Zero && firing_rate > 0.2)  //0.2 controls firing rate... only shoot a bullet if
             {                                                                       //time elapsed greater than 0.2 seconds
                 ShootBullet(theGPState, theMouseState);
                 firing_rate = 0.0f;
             }
-            else if (theMouseState.LeftButton == ButtonState.Pressed && firing_rate > 0.15)
+            else if (theMouseState.LeftButton == ButtonState.Pressed && firing_rate > 0.2)
             {
                 ShootBullet(theGPState, theMouseState);
                 firing_rate = 0.0f;

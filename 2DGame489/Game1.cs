@@ -36,8 +36,10 @@ namespace _2DGame489
 
         LinkedList<Obstacle> obstacleList;
         LinkedList<Obstacle> recycledObstacles;
+
         LinkedList<Enemy> enemyList;
         LinkedList<Enemy> recycledEnemies;
+
         Obstacle smallObstacleLoader; // Used to load the first instance of a small obstacle
         Obstacle smallDestroyedObstacleLoader;
         Enemy enemyLoader;
@@ -45,13 +47,14 @@ namespace _2DGame489
         HealthBar HBar;
 
         //enemy object and position info
-        Texture2D enemyTexture;
-        Vector2 enemyTextureCenter;
-        Vector2 enemyPosition;
-        EnemyAiState enemyState = EnemyAiState.Wander;
-        float enemyOrientation;
-        Vector2 enemyWanderDirection;
-
+        private EnemyStats RAPTOR_STATS;
+        //Texture2D enemyTexture;
+        //Vector2 enemyTextureCenter;
+        //Vector2 enemyPosition;
+        //EnemyAiState enemyState = EnemyAiState.Wander;
+        //float enemyOrientation;
+        //Vector2 enemyWanderDirection;
+        /*
         //enums and state info for enemy
         /// <summary>
         /// EnemyAiState is used to keep track of what the enemy is currently doing.
@@ -64,8 +67,8 @@ namespace _2DGame489
             Caught,
             // the enemy can't "see" the jeep, and is wandering around.
             Wander
-        }
-
+        }*/
+        /*
         // how fast can the enemy move?
         const float MaxEnemySpeed = 4.0f;
 
@@ -80,9 +83,9 @@ namespace _2DGame489
         // he has "caught" the jeep.
         const float EnemyCaughtDistance = 60.0f;
 
-        // this constant is used to avoid hysteresis, which is common in ai programming.
-        // see the doc for more details.
+        // this constant is used to avoid hysteresis
         const float EnemyHysteresis = 15.0f;
+         */
 
         ExplosionPS explosion;
         ExplosionSmokePS explosion_smoke;
@@ -95,8 +98,8 @@ namespace _2DGame489
         private Rectangle boundingBox2;
 
         // Defined to prevent overlapping when obstacles are randomly generated
-        const int UNIT_OBSTACLE_WIDTH = 50;
-        const int UNIT_OBSTACLE_HEIGHT = 50;
+        const int UNIT_OBJECT_WIDTH = 50;
+        const int UNIT_OBJECT_HEIGHT = 50;
 
         private const double OBSTACLE_PLACEMENT_ODDS = 0.015;
         private const double OBSTACLE_ROCK_ODDS = 0.80;
@@ -104,8 +107,8 @@ namespace _2DGame489
         private const double OBSTACLE_LOG_ODDS = 0.20;
 
         private const double ENEMY_PLACEMENT_ODDS = 0.005;
-        private const double ENEMY_DINO1_ODDS = 0.80;
-        private const double ENEMY_DINO2_ODDS = 0.20;
+        private const double ENEMY_DINO1_ODDS = 1.0;
+        private const double ENEMY_DINO2_ODDS = 0.0;
 
         #region Random Numbers and Helper functions
         private static Random random = new Random();    //Particle random number generator
@@ -177,6 +180,13 @@ namespace _2DGame489
 
             grass = new GrassPS(this, 1);
             Components.Add(grass);
+
+            // Initialize struct for setting enemy raptor stats
+            this.RAPTOR_STATS.maxSpeed = 3.0f;
+            this.RAPTOR_STATS.turnSpeed = 0.05f;
+            this.RAPTOR_STATS.chaseDistance = 2000.0f;
+            this.RAPTOR_STATS.caughtDistance = 60.0f;
+            this.RAPTOR_STATS.hysteresis = 15.0f;
         }
 
         /// <summary>
@@ -212,13 +222,13 @@ namespace _2DGame489
             smallObstacleLoader = new Obstacle("obstacle_small");
             smallDestroyedObstacleLoader = new Obstacle("obstacle_small_destroyed");
 
-            enemyLoader = new Enemy("raptor");
+            enemyLoader = new Enemy("raptor", this.RAPTOR_STATS);
 
             randNumGenerator = new Random();
 
             Viewport vp = graphics.GraphicsDevice.Viewport;
 
-            enemyPosition = new Vector2(vp.Width / 4, vp.Height / 2);
+            //enemyPosition = new Vector2(vp.Width / 4, vp.Height / 2);
 
             base.Initialize();
         }
@@ -254,9 +264,9 @@ namespace _2DGame489
             tankTextureCenter =
                 new Vector2(tankTexture.Width / 2, tankTexture.Height / 2);*/
 
-            enemyTexture = Content.Load<Texture2D>("raptor");
-            enemyTextureCenter =
-                new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2);
+            //enemyTexture = Content.Load<Texture2D>("raptor");
+            //enemyTextureCenter =
+            //    new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2);
 
             turretReticle.LoadContent(this.Content);
 
@@ -279,7 +289,7 @@ namespace _2DGame489
             //obstacleList.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
             double randomNum;
 
-            for (int i = 0; i < MAX_WINX / UNIT_OBSTACLE_WIDTH; i++)
+            for (int i = 0; i < MAX_WINX / UNIT_OBJECT_WIDTH; i++)
             {
                 randomNum = randNumGenerator.NextDouble();
                 if (randomNum < OBSTACLE_PLACEMENT_ODDS)
@@ -302,7 +312,7 @@ namespace _2DGame489
                         i++;
                     }
 
-                    obNode.Value.Position.X = i * UNIT_OBSTACLE_WIDTH;
+                    obNode.Value.Position.X = i * UNIT_OBJECT_WIDTH;
                     obNode.Value.Position.Y = yVal;
                     obNode.Value.LoadContent(this.Content);
                     obstacleList.AddLast(obNode);
@@ -310,41 +320,43 @@ namespace _2DGame489
             }
         }
 
-        /*protected void generateNewEnemies(float yVal)
+        protected void generateNewEnemies(float yVal)
         {
             //obstacleList.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
             double randomNum;
 
-            for (int i = 0; i < MAX_WINX / UNIT_OBSTACLE_WIDTH; i++)
+            for (int i = 0; i < MAX_WINX / UNIT_OBJECT_WIDTH; i++)
             {
                 randomNum = randNumGenerator.NextDouble();
                 if (randomNum < ENEMY_PLACEMENT_ODDS)
                 {
                     LinkedListNode<Enemy> enemyNode;
-                    if (recycledObstacles.Count == 0)
+                    if (recycledEnemies.Count == 0)
                     {
-                        enemyNode = new LinkedListNode<Enemy>(new Enemy("Tank"));
+                        enemyNode = new LinkedListNode<Enemy>(new Enemy("raptor", this.RAPTOR_STATS));
                     }
                     else
                     {
                         enemyNode = recycledEnemies.First;
-                        recycledObstacles.RemoveFirst();
-                        enemyNode.Value.AssetName = "Tank";
+                        recycledEnemies.RemoveFirst();
+                        enemyNode.Value.AssetName = "raptor";
+                        enemyNode.Value.state = EnemyAiState.Chasing;
+                        enemyNode.Value.stats = this.RAPTOR_STATS;
                     }
-
+                    /*
                     if (randomNum < ENEMY_DINO2_ODDS * ENEMY_PLACEMENT_ODDS)
                     {
                         enemyNode.Value.AssetName = "obstacle_log";
                         i++;
                     }
-
-                    enemyNode.Value.Position.X = i * UNIT_OBSTACLE_WIDTH;
+                    */
+                    enemyNode.Value.Position.X = i * UNIT_OBJECT_WIDTH;
                     enemyNode.Value.Position.Y = yVal;
                     enemyNode.Value.LoadContent(this.Content);
                     enemyList.AddLast(enemyNode);
                 }
             }
-        }*/
+        }
 
         // Recycle any obstacles that are no longer in view
         protected void garbageCollectObstacles()
@@ -366,27 +378,6 @@ namespace _2DGame489
                 }
             }
         }
-
-        /*// Recycle any enemies that are no longer in view
-        protected void garbageCollectEnemies()
-        {
-            LinkedListNode<Enemy> enemyListNode = enemyList.First;
-            LinkedListNode<Enemy> nextNode = null;
-            while (enemyListNode != null)
-            {
-                if (enemyListNode.Value.Position.Y > MAX_WINY)
-                {
-                    nextNode = enemyListNode.Next;
-                    enemyList.Remove(enemyListNode);
-                    recycledEnemies.AddLast(enemyListNode);
-                    enemyListNode = nextNode;
-                }
-                else
-                {
-                    enemyListNode = enemyListNode.Next;
-                }
-            }
-        }*/
 
         // Tests collisions between the jeep and other in-game elements
         protected void processObstacleCollisions(GameTime theGameTime)
@@ -418,7 +409,7 @@ namespace _2DGame489
                     recycledObstacles.AddLast(obstacleMatrixNode);
 
                     // TODO: Put damage updating function call here
-                    Player1.Jeep_health -= 10;
+                    Player1.Jeep_health -= 5;
                     Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
 
                     //make big explosion
@@ -432,46 +423,26 @@ namespace _2DGame489
             }
         }
 
-       /* // Tests collisions between the jeep and other in-game elements
+        // Tests collisions between the jeep and enemies
         protected void processEnemyCollisions()
         {
             // Update enemies based on scrolling background
-            LinkedListNode<Enemy> enemyMatrixNode = enemyList.First;
+            LinkedListNode<Enemy> enemyListNode = enemyList.First;
             LinkedListNode<Enemy> nextNode = null;
-            while (enemyMatrixNode != null)
+            while (enemyListNode != null)
             {
-                Enemy currentEn = enemyMatrixNode.Value;
-                nextNode = enemyMatrixNode.Next;
-                //boundingBox1 = new Rectangle((int)Player1.Position.X, (int)Player1.Position.Y, Player1.Source.Width, Player1.Source.Height);
-                boundingBox1.X = (int)Player1.Position.X;
-                boundingBox1.Y = (int)Player1.Position.Y;
-                boundingBox1.Width = Player1.Source.Width;
-                boundingBox1.Height = Player1.Source.Height;
-                //boundingBox2 = new Rectangle((int)currentEn.Position.X, (int)currentEn.Position.Y, currentEn.Source.Width, currentEn.Source.Height);
-                boundingBox2.X = (int)currentEn.Position.X;
-                boundingBox2.Y = (int)currentEn.Position.Y;
-                boundingBox2.Width = currentEn.Source.Width;
-                boundingBox2.Height = currentEn.Source.Height;
-
-                if (boundingBox1.Intersects(boundingBox2)) // Jeep collided with an enemy
+                if (enemyListNode.Value.state == EnemyAiState.Caught)
                 {
-                    //Enemy en = new Enemy("Tank");
-                    //currentEn.AssetName = "dead_dino";
-                    //currentEn.LoadContent(this.Content);
-                    enemyList.Remove(enemyMatrixNode);
-                    recycledEnemies.AddLast(enemyMatrixNode);
+                    Player1.Jeep_health -= 10;
+                    Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
 
-                    // TODO: Put damage updating function call here
-
-                    //make big explosion
-                    //Vector2 where;
-                    //where.X = currentEn.Position.X + currentEn.Source.Width / 2;
-                    //where.Y = currentEn.Position.Y + currentEn.Source.Height / 2;
-                   // explosion.AddParticles(where);
+                    enemyList.Remove(enemyListNode);
+                    recycledEnemies.AddLast(enemyListNode);
                 }
-                enemyMatrixNode = nextNode;
+
+                enemyListNode = nextNode;
             }
-        }*/
+        }
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -490,14 +461,10 @@ namespace _2DGame489
             KeyboardState aKeyboardState = Keyboard.GetState();
 
             // UpdateEnemy will run the AI code that controls the enemy's movement...
-            UpdateEnemy();
+            //UpdateEnemy();
 
             //Update Health Bar
             HBar.Update(gameTime);
-
-            // Once we've finished that, we'll use the ClampToViewport helper function
-            // to clamp the enemy's position so that it stays on the screen.
-            enemyPosition = ClampToViewport(enemyPosition);
 
             switch (mCurrentScreen)
             {
@@ -605,15 +572,28 @@ namespace _2DGame489
                 obstacleListNode = obstacleListNode.Next;
             }
 
-            // Create a new row of obstacles if needed
-            if ((this.previousY + distanceTravelled.Y) >= UNIT_OBSTACLE_HEIGHT)
+            // Create a new row of obstacles and enemies, if needed
+            if ((this.previousY + distanceTravelled.Y) >= UNIT_OBJECT_HEIGHT)
             {
-                this.previousY = (this.previousY + distanceTravelled.Y) % UNIT_OBSTACLE_HEIGHT;
-                generateNewRow(this.previousY - UNIT_OBSTACLE_HEIGHT);
+                this.previousY = (this.previousY + distanceTravelled.Y) % UNIT_OBJECT_HEIGHT;
+                generateNewRow(this.previousY - UNIT_OBJECT_HEIGHT);
+                generateNewEnemies(900);
             }
             else
             {
                 this.previousY += distanceTravelled.Y;
+            }
+
+            // Update enemies
+            LinkedListNode<Enemy> enemyListNode = enemyList.First;
+            while (enemyListNode != null)
+            {
+                enemyListNode.Value.Update(gameTime, Player1.Position + new Vector2(Player1.Size.Width / 2.0f, Player1.Size.Height / 2.0f));
+                enemyListNode = enemyListNode.Next;
+
+                // Once we've finished that, we'll use the ClampToViewport helper function
+                // to clamp the enemy's position so that it stays on the screen.
+                //enemyPosition = ClampToViewport(enemyPosition);
             }
 
             /*// Update enemies based on scrolling background
@@ -622,17 +602,6 @@ namespace _2DGame489
             {
                 enemyListNode.Value.Position += distanceTravelled;
                 enemyListNode = enemyListNode.Next;
-            }
-
-            // Create a new row of enemies if needed
-            if ((this.previousY + distanceTravelled.Y) >= UNIT_OBSTACLE_HEIGHT)
-            {
-                this.previousY = (this.previousY + distanceTravelled.Y) % UNIT_OBSTACLE_HEIGHT;
-                generateNewRow(this.previousY - UNIT_OBSTACLE_HEIGHT);
-            }
-            else
-            {
-                this.previousY += distanceTravelled.Y;
             }*/
 
             //these if-statements shuffle the pictures as they go out of view
@@ -645,9 +614,7 @@ namespace _2DGame489
 
             // Perform collision detection
             processObstacleCollisions(gameTime);
-
-            /*//Perform collision detection
-            processEnemyCollisions(); */
+            processEnemyCollisions();
             
             turretReticle.Update(gameTime);
 
@@ -665,243 +632,6 @@ namespace _2DGame489
             vector.Y = MathHelper.Clamp(vector.Y, vp.Y, vp.Y + vp.Height);
             return vector;
         }
-
-        /// <summary>
-        /// UpdateEnemy runs the AI code that will update the enemy's orientation and
-        /// position. The enemy has three states: chase, caught and idle.
-        /// </summary>
-        private void UpdateEnemy()
-        {
-     
-            // First we have to use the current state to decide what the thresholds are
-            // for changing state, as described in the doc.
-
-            float enemyChaseThreshold = EnemyChaseDistance;
-            float enemyCaughtThreshold = EnemyCaughtDistance;
-            // if the enemy is idle, he prefers to stay idle. we do this by making the
-            // chase distance smaller, so the enemy will be less likely to begin chasing
-            // the jeep.
-            if (enemyState == EnemyAiState.Wander)
-            {
-                enemyChaseThreshold -= EnemyHysteresis / 2;
-            }
-            // similarly, if the enemy is active, he prefers to stay active. we
-            // accomplish this by increasing the range of values that will cause the
-            // enemy to go into the active state.
-            else if (enemyState == EnemyAiState.Chasing)
-            {
-                enemyChaseThreshold += EnemyHysteresis / 2;
-                enemyCaughtThreshold -= EnemyHysteresis / 2;
-            }
-            // the same logic is applied to the finished state.
-            else if (enemyState == EnemyAiState.Caught)
-            {
-                enemyCaughtThreshold += EnemyHysteresis / 2;
-            }
-
-            // Second, now that we know what the thresholds are, we compare the enemy's 
-            // distance from the jeep against the thresholds to decide what the enemy's
-            // current state is.
-            float distanceFromJeep = Vector2.Distance(enemyPosition, Player1.Position);
-            if (distanceFromJeep > enemyChaseThreshold)
-            {
-                // if the enemy is far away from the jeep, it should idle
-                enemyState = EnemyAiState.Wander;
-            }
-            else if (distanceFromJeep > enemyCaughtThreshold)
-            {
-                enemyState = EnemyAiState.Chasing;
-            }
-            else
-            {
-                enemyState = EnemyAiState.Caught;
-            }
-
-            // Third, once we know what state we're in, act on that state.
-            float currentEnemySpeed;
-            if (enemyState == EnemyAiState.Chasing)
-            {
-                // the enemy wants to chase the jeep, so it will just use the TurnToFace
-                // function to turn towards the jeep's position. Then, when the enemy
-                // moves forward, he will chase the jeep.
-                enemyOrientation = TurnToFace(enemyPosition, Player1.Position, enemyOrientation,
-                    EnemyTurnSpeed);
-                currentEnemySpeed = MaxEnemySpeed;
-            }
-            else if (enemyState == EnemyAiState.Wander)
-            {
-                // call the wander function for the enemy
-                Wander(enemyPosition, ref enemyWanderDirection, ref enemyOrientation,
-                    EnemyTurnSpeed);
-                currentEnemySpeed = .25f * MaxEnemySpeed;
-            }
-            else
-            {
-                // if the enemy catches the jeep, it should stop.
-                // Otherwise it will run right by, then spin around and
-                // try to catch it all over again. The end result is that it will kind
-                // of "run laps" around the jeep, which looks funny, but is not what
-                // we're after.
-                currentEnemySpeed = 0.0f;
-            }
-
-            // this calculation is also important; we construct a heading
-            // vector based on the enemy's orientation, and then make the enemy move along
-            // that heading.
-            Vector2 heading = new Vector2(
-                (float)Math.Cos(enemyOrientation), (float)Math.Sin(enemyOrientation));
-            enemyPosition += heading * currentEnemySpeed;
-        }
-
-        /// <summary>
-        /// Wander contains functionality for the enemy, and does just what its name implies: makes them wander around the
-        /// screen. The specifics of the function are described in more detail in the
-        /// accompanying doc.
-        /// </summary>
-        /// <param name="position">the position of the character that is wandering
-        /// </param>
-        /// <param name="wanderDirection">the direction that the character is currently
-        /// wandering. this parameter is passed by reference because it is an input and
-        /// output parameter: Wander accepts it as input, and will update it as well.
-        /// </param>
-        /// <param name="orientation">the character's orientation. this parameter is
-        /// also passed by reference and is an input/output parameter.</param>
-        /// <param name="turnSpeed">the character's maximum turning speed.</param>
-        private void Wander(Vector2 position, ref Vector2 wanderDirection,
-            ref float orientation, float turnSpeed)
-        {
-            // The wander effect is accomplished by having the character aim in a random
-            // direction. Every frame, this random direction is slightly modified.
-            // Finally, to keep the characters on the center of the screen, we have them
-            // turn to face the screen center. The further they are from the screen
-            // center, the more they will aim back towards it.
-
-            // the first step of the wander behavior is to use the random number
-            // generator to offset the current wanderDirection by some random amount.
-            // .25 is a bit of a magic number, but it controls how erratic the wander
-            // behavior is. Larger numbers will make the characters "wobble" more,
-            // smaller numbers will make them more stable. we want just enough
-            // wobbliness to be interesting without looking odd.
-            wanderDirection.X +=
-                MathHelper.Lerp(-.25f, .25f, (float)random.NextDouble());
-            wanderDirection.Y +=
-                MathHelper.Lerp(-.25f, .25f, (float)random.NextDouble());
-
-            // we'll renormalize the wander direction, ...
-            if (wanderDirection != Vector2.Zero)
-            {
-                wanderDirection.Normalize();
-            }
-            // ... and then turn to face in the wander direction. We don't turn at the
-            // maximum turning speed, but at 15% of it. Again, this is a bit of a magic
-            // number: it works well for this sample, but feel free to tweak it.
-            orientation = TurnToFace(position, position + wanderDirection, orientation,
-                .15f * turnSpeed);
-
-
-            // next, we'll turn the characters back towards the center of the screen, to
-            // prevent them from getting stuck on the edges of the screen.
-            Vector2 screenCenter = Vector2.Zero;
-            screenCenter.X = graphics.GraphicsDevice.Viewport.Width / 2;
-            screenCenter.Y = graphics.GraphicsDevice.Viewport.Height / 2;
-
-            // Here we are creating a curve that we can apply to the turnSpeed. This
-            // curve will make it so that if we are close to the center of the screen,
-            // we won't turn very much. However, the further we are from the screen
-            // center, the more we turn. At most, we will turn at 30% of our maximum
-            // turn speed. This too is a "magic number" which works well for the sample.
-            // Feel free to play around with this one as well: smaller values will make
-            // the characters explore further away from the center, but they may get
-            // stuck on the walls. Larger numbers will hold the characters to center of
-            // the screen. If the number is too large, the characters may end up
-            // "orbiting" the center.
-            float distanceFromScreenCenter = Vector2.Distance(screenCenter, position);
-            float MaxDistanceFromScreenCenter =
-                Math.Min(screenCenter.Y, screenCenter.X);
-
-            float normalizedDistance =
-                distanceFromScreenCenter / MaxDistanceFromScreenCenter;
-
-            float turnToCenterSpeed = .3f * normalizedDistance * normalizedDistance *
-                turnSpeed;
-
-            // once we've calculated how much we want to turn towards the center, we can
-            // use the TurnToFace function to actually do the work.
-            orientation = TurnToFace(position, screenCenter, orientation,
-                turnToCenterSpeed);
-        }
-
-        /// <summary>
-        /// Calculates the angle that an object should face, given its position, its
-        /// target's position, its current angle, and its maximum turning speed.
-        /// </summary>
-        private static float TurnToFace(Vector2 position, Vector2 faceThis,
-            float currentAngle, float turnSpeed)
-        {
-            // consider this diagram:
-            //         B 
-            //        /|
-            //      /  |
-            //    /    | y
-            //  / o    |
-            // A--------
-            //     x
-            // 
-            // where A is the position of the object, B is the position of the target,
-            // and "o" is the angle that the object should be facing in order to 
-            // point at the target. we need to know what o is. using trig, we know that
-            //      tan(theta)       = opposite / adjacent
-            //      tan(o)           = y / x
-            // if we take the arctan of both sides of this equation...
-            //      arctan( tan(o) ) = arctan( y / x )
-            //      o                = arctan( y / x )
-            // so, we can use x and y to find o, our "desiredAngle."
-            // x and y are just the differences in position between the two objects.
-            float x = faceThis.X - position.X;
-            float y = faceThis.Y - position.Y;
-
-            // we'll use the Atan2 function. Atan will calculates the arc tangent of 
-            // y / x for us, and has the added benefit that it will use the signs of x
-            // and y to determine what cartesian quadrant to put the result in.
-            // http://msdn2.microsoft.com/en-us/library/system.math.atan2.aspx
-            float desiredAngle = (float)Math.Atan2(y, x);
-
-            // so now we know where we WANT to be facing, and where we ARE facing...
-            // if we weren't constrained by turnSpeed, this would be easy: we'd just 
-            // return desiredAngle.
-            // instead, we have to calculate how much we WANT to turn, and then make
-            // sure that's not more than turnSpeed.
-
-            // first, figure out how much we want to turn, using WrapAngle to get our
-            // result from -Pi to Pi ( -180 degrees to 180 degrees )
-            float difference = WrapAngle(desiredAngle - currentAngle);
-
-            // clamp that between -turnSpeed and turnSpeed.
-            difference = MathHelper.Clamp(difference, -turnSpeed, turnSpeed);
-
-            // so, the closest we can get to our target is currentAngle + difference.
-            // return that, using WrapAngle again.
-            return WrapAngle(currentAngle + difference);
-        }
-
-        /// <summary>
-        /// Returns the angle expressed in radians between -Pi and Pi.
-        /// <param name="radians">the angle to wrap, in radians.</param>
-        /// <returns>the input value expressed in radians from -Pi to Pi.</returns>
-        /// </summary>
-        private static float WrapAngle(float radians)
-        {
-            while (radians < -MathHelper.Pi)
-            {
-                radians += MathHelper.TwoPi;
-            }
-            while (radians > MathHelper.Pi)
-            {
-                radians -= MathHelper.TwoPi;
-            }
-            return radians;
-        }
-
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -926,22 +656,9 @@ namespace _2DGame489
 
                 case Screen.Main:
                     {
-                        //draw scrolling background
+                        // Draw scrolling background
                         myBackground.Draw(this.spriteBatch);
                         myBackground2.Draw(this.spriteBatch);
-
-                        // draw the enemy
-                        spriteBatch.Draw(enemyTexture, enemyPosition, null, Color.White,
-                            enemyOrientation, enemyTextureCenter, 1.0f, SpriteEffects.None, 0.0f);
-                        
-
-                        /*// Draw enemies
-                        LinkedListNode<Enemy> enemyListNode = enemyList.First;
-                        while (enemyListNode != null)
-                        {
-                            enemyListNode.Value.Draw(this.spriteBatch);
-                            enemyListNode = enemyListNode.Next;
-                        } */
 
                         // Draw obstacles
                         LinkedListNode<Obstacle> obstacleListNode = obstacleList.First;
@@ -951,9 +668,18 @@ namespace _2DGame489
                             obstacleListNode = obstacleListNode.Next;
                         }
 
-                        //draw player
+                        // Draw player
                         Player1.Draw(this.spriteBatch);
 
+                        // Draw enemies
+                        LinkedListNode<Enemy> enemyListNode = enemyList.First;
+                        while (enemyListNode != null)
+                        {
+                            enemyListNode.Value.Draw(this.spriteBatch);
+                            enemyListNode = enemyListNode.Next;
+                        }
+
+                        // Draw reticle
                         turretReticle.Draw(this.spriteBatch);
 
                         HBar.Draw(this.spriteBatch);
