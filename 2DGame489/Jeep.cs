@@ -28,7 +28,7 @@ namespace _2DGame489
         private Vector2 BULLET_DIRECTION = Vector2.Zero;
         private Vector2 BULLET_SPEED = new Vector2(1500, 1500);
         
-        List<Bullet> bullets = new List<Bullet>();  //bullets for the turret
+        public List<Bullet> bullets = new List<Bullet>();  //bullets for the turret
         ContentManager mContentManager;     //will be used to create new bullets when we need them
 
         Turret Jeep_Turret = new Turret();  //gun turret for jeep
