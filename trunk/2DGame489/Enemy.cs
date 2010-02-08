@@ -35,6 +35,22 @@ namespace _2DGame489
 
     class Enemy : Sprite
     {
+        // Enemy collision detection is handled by a list of circles, starting from the head
+        private static int[] COLLISION_RADII = { 10, 10, 10, 20, 30, 20, 20, 20 };
+        private static int COLLISION_RADII_LEN = COLLISION_RADII.Count<int>();
+
+        private const int COLLISION_START_X = 140;
+        private const int COLLISION_END_X = 15;
+        private const int COLLISION_Y = 25;
+
+        private Vector2 firstCollisionCircleCenter;
+        private Vector2 lastCollisionCircleCenter;
+
+        private Vector2 toLastCircle; // Vector pointing to lastCollisionCircleCenter
+
+        private bool boundingCirclesUpdated;
+
+
         public EnemyStats stats;
 
         public EnemyAiState state;
@@ -44,6 +60,12 @@ namespace _2DGame489
             this.AssetName = assetName;
             this.stats = stats;
             this.state = EnemyAiState.Chasing;
+
+            this.boundingCirclesUpdated = false;
+
+            this.firstCollisionCircleCenter = new Vector2();
+            this.lastCollisionCircleCenter = new Vector2();
+            this.toLastCircle = new Vector2();
         }
 
         public void LoadContent(ContentManager theContentManager)
@@ -51,6 +73,7 @@ namespace _2DGame489
             base.LoadContent(theContentManager, this.AssetName);
             this.Scale = 1.0f;
             this.is_projectile = false;
+            this.boundingCirclesUpdated = false;
         }
 
         public void Update(GameTime theGameTime, Vector2 jeepPosition)
@@ -133,6 +156,61 @@ namespace _2DGame489
             Vector2 heading = new Vector2(
                 (float)Math.Cos(this.rotation), (float)Math.Sin(this.rotation));
             this.Position += heading * currentEnemySpeed;
+
+            this.boundingCirclesUpdated = false;
+        }
+
+        public bool collidesWith(float x, float y, int radius)
+        {
+            // If necessary, the rotated location of the head and tail collision circles are calculated.
+            // This allows the location of the middle circles to be extrapolated from their radii.
+            if (!this.boundingCirclesUpdated)
+            {
+                double cosAngle = Math.Cos(this.rotation);
+                double sinAngle = Math.Sin(this.rotation);
+                double column3row1 = this.Position.X + (this.Position.Y * sinAngle) - (this.Position.X * cosAngle);
+                double column3row2 = this.Position.Y - (this.Position.Y * cosAngle) - (this.Position.X * sinAngle);
+
+                this.firstCollisionCircleCenter.X = (float)((cosAngle * (Position.X + COLLISION_START_X)) - (sinAngle * (Position.Y + COLLISION_Y)) + column3row1);
+                this.firstCollisionCircleCenter.Y = (float)((sinAngle * (Position.X + COLLISION_START_X)) + (cosAngle * (Position.Y + COLLISION_Y)) + column3row2);
+
+                this.lastCollisionCircleCenter.X = (float)((cosAngle * (Position.X + COLLISION_END_X)) - (sinAngle * (Position.Y + COLLISION_Y)) + column3row1);
+                this.lastCollisionCircleCenter.Y = (float)((sinAngle * (Position.X + COLLISION_END_X)) + (cosAngle * (Position.Y + COLLISION_Y)) + column3row2);
+
+                this.toLastCircle = this.lastCollisionCircleCenter - this.firstCollisionCircleCenter;
+                this.toLastCircle.Normalize();
+
+                this.boundingCirclesUpdated = true;
+            }
+
+            Vector2 currentPosition = this.firstCollisionCircleCenter;
+            double distanceSquared;
+            double radiiSquared;
+
+            // Start from the head and move towards the tail
+            for (int i = 0; i < COLLISION_RADII_LEN - 1; i++)
+            {
+                distanceSquared = (currentPosition.X - x) * (currentPosition.X - x) + (currentPosition.Y - y) * (currentPosition.Y - y);
+                radiiSquared = (COLLISION_RADII[i] + radius) * (COLLISION_RADII[i] + radius);
+
+                if (radiiSquared > distanceSquared)
+                {
+                    return true; // Bullet hit enemy
+                }
+
+                currentPosition += (this.toLastCircle * (COLLISION_RADII[i] + COLLISION_RADII[i+1]));
+            }
+
+            // Last circle done separately to avoid an out-of-range exception by calculating currentPosition
+            distanceSquared = (currentPosition.X - x) * (currentPosition.X - x) + (currentPosition.Y - y) * (currentPosition.Y - y);
+            radiiSquared = (COLLISION_RADII[COLLISION_RADII_LEN - 1] + radius) * (COLLISION_RADII[COLLISION_RADII_LEN - 1] + radius);
+
+            if (radiiSquared > distanceSquared)
+            {
+                return true; // Bullet hit enemy
+            }
+
+            return false; // Bullet did not hit enemy
         }
 
         public override void Draw(SpriteBatch theSpriteBatch)

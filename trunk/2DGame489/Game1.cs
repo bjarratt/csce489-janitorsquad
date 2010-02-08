@@ -48,44 +48,6 @@ namespace _2DGame489
 
         //enemy object and position info
         private EnemyStats RAPTOR_STATS;
-        //Texture2D enemyTexture;
-        //Vector2 enemyTextureCenter;
-        //Vector2 enemyPosition;
-        //EnemyAiState enemyState = EnemyAiState.Wander;
-        //float enemyOrientation;
-        //Vector2 enemyWanderDirection;
-        /*
-        //enums and state info for enemy
-        /// <summary>
-        /// EnemyAiState is used to keep track of what the enemy is currently doing.
-        /// </summary>
-        enum EnemyAiState
-        {
-            // chasing the jeep
-            Chasing,
-            // the enemy has gotten close enough to the jeep that it can stop chasing it
-            Caught,
-            // the enemy can't "see" the jeep, and is wandering around.
-            Wander
-        }*/
-        /*
-        // how fast can the enemy move?
-        const float MaxEnemySpeed = 4.0f;
-
-        // how fast can he turn?
-        const float EnemyTurnSpeed = 0.10f;
-
-        // this value controls the distance at which the enemy will start to chase the
-        // jeep.
-        const float EnemyChaseDistance = 350.0f;
-
-        // EnemyCaughtDistance controls the distance at which the enemy will stop because
-        // he has "caught" the jeep.
-        const float EnemyCaughtDistance = 60.0f;
-
-        // this constant is used to avoid hysteresis
-        const float EnemyHysteresis = 15.0f;
-         */
 
         ExplosionPS explosion;
         ExplosionSmokePS explosion_smoke;
@@ -101,7 +63,7 @@ namespace _2DGame489
         const int UNIT_OBJECT_WIDTH = 50;
         const int UNIT_OBJECT_HEIGHT = 50;
 
-        private const double OBSTACLE_PLACEMENT_ODDS = 0.015;
+        private const double OBSTACLE_PLACEMENT_ODDS = 0.01;
         private const double OBSTACLE_ROCK_ODDS = 0.80;
         //private const double OBSTACLE_POND_ODDS = 0.25;
         private const double OBSTACLE_LOG_ODDS = 0.20;
@@ -109,6 +71,10 @@ namespace _2DGame489
         private const double ENEMY_PLACEMENT_ODDS = 0.005;
         private const double ENEMY_DINO1_ODDS = 1.0;
         private const double ENEMY_DINO2_ODDS = 0.0;
+
+        private const int ENEMY_SPAWN_Y = 900;
+
+        private const int BULLET_COLLISION_RADIUS = 5;
 
         #region Random Numbers and Helper functions
         private static Random random = new Random();    //Particle random number generator
@@ -226,10 +192,6 @@ namespace _2DGame489
 
             randNumGenerator = new Random();
 
-            Viewport vp = graphics.GraphicsDevice.Viewport;
-
-            //enemyPosition = new Vector2(vp.Width / 4, vp.Height / 2);
-
             base.Initialize();
         }
 
@@ -259,14 +221,6 @@ namespace _2DGame489
             Player1.LoadContent(this.Content);
 
             HBar.LoadContent(this.Content); 
-
-            /*tankTexture = Content.Load<Texture2D>("Tank");
-            tankTextureCenter =
-                new Vector2(tankTexture.Width / 2, tankTexture.Height / 2);*/
-
-            //enemyTexture = Content.Load<Texture2D>("raptor");
-            //enemyTextureCenter =
-            //    new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2);
 
             turretReticle.LoadContent(this.Content);
 
@@ -322,7 +276,6 @@ namespace _2DGame489
 
         protected void generateNewEnemies(float yVal)
         {
-            //obstacleList.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
             double randomNum;
 
             for (int i = 0; i < MAX_WINX / UNIT_OBJECT_WIDTH; i++)
@@ -402,13 +355,9 @@ namespace _2DGame489
 
                 if (boundingBox1.Intersects(boundingBox2)) // Jeep collided with an obstacle
                 {
-                    //Obstacle ob = new Obstacle("obstacle_small_destroyed");
-                    //currentOb.AssetName = "obstacle_small_destroyed";
-                    //currentOb.LoadContent(this.Content);
                     obstacleList.Remove(obstacleMatrixNode);
                     recycledObstacles.AddLast(obstacleMatrixNode);
 
-                    // TODO: Put damage updating function call here
                     Player1.Jeep_health -= 5;
                     Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
 
@@ -426,7 +375,6 @@ namespace _2DGame489
         // Tests collisions between the jeep and enemies
         protected void processEnemyCollisions()
         {
-            // Update enemies based on scrolling background
             LinkedListNode<Enemy> enemyListNode = enemyList.First;
             LinkedListNode<Enemy> nextNode = null;
             while (enemyListNode != null)
@@ -459,9 +407,6 @@ namespace _2DGame489
             
             //Menu screen logic
             KeyboardState aKeyboardState = Keyboard.GetState();
-
-            // UpdateEnemy will run the AI code that controls the enemy's movement...
-            //UpdateEnemy();
 
             //Update Health Bar
             HBar.Update(gameTime);
@@ -551,18 +496,12 @@ namespace _2DGame489
             // Store the Keyboard state
             mPreviousKeyboardState = aKeyboardState;
             
-            //Update scrolling background
-            //Vector2 speed = new Vector2(0, SCROLL_SPEED);
-            //Vector2 dir = new Vector2(0, 1);        //background movement is in Y direction only
             Vector2 distanceTravelled = SCROLL_SPEED * SCROLL_DIR * (float)gameTime.ElapsedGameTime.TotalSeconds;
             myBackground.Position += distanceTravelled;
             myBackground2.Position += distanceTravelled;
             
             // Perform garbage collection on obstacles
             garbageCollectObstacles();
-
-            /*// Perform garbage collection on enemies
-            garbageCollectEnemies();*/
 
             // Update obstacles based on scrolling background
             LinkedListNode<Obstacle> obstacleListNode = obstacleList.First;
@@ -577,7 +516,7 @@ namespace _2DGame489
             {
                 this.previousY = (this.previousY + distanceTravelled.Y) % UNIT_OBJECT_HEIGHT;
                 generateNewRow(this.previousY - UNIT_OBJECT_HEIGHT);
-                generateNewEnemies(900);
+                generateNewEnemies(ENEMY_SPAWN_Y);
             }
             else
             {
@@ -590,10 +529,6 @@ namespace _2DGame489
             {
                 enemyListNode.Value.Update(gameTime, Player1.Position + new Vector2(Player1.Size.Width / 2.0f, Player1.Size.Height / 2.0f));
                 enemyListNode = enemyListNode.Next;
-
-                // Once we've finished that, we'll use the ClampToViewport helper function
-                // to clamp the enemy's position so that it stays on the screen.
-                //enemyPosition = ClampToViewport(enemyPosition);
             }
 
             /*// Update enemies based on scrolling background
@@ -615,6 +550,7 @@ namespace _2DGame489
             // Perform collision detection
             processObstacleCollisions(gameTime);
             processEnemyCollisions();
+            processBulletHits();
             
             turretReticle.Update(gameTime);
 
@@ -624,13 +560,30 @@ namespace _2DGame489
             }
         }
 
-        //helps the enemy stay on the screen
-        private Vector2 ClampToViewport(Vector2 vector)
+        private void processBulletHits()
         {
-            Viewport vp = graphics.GraphicsDevice.Viewport;
-            vector.X = MathHelper.Clamp(vector.X, vp.X, vp.X + vp.Width);
-            vector.Y = MathHelper.Clamp(vector.Y, vp.Y, vp.Y + vp.Height);
-            return vector;
+            LinkedListNode<Enemy> enemyListNode = enemyList.First;
+            LinkedListNode<Enemy> nextNode = null;
+            while (enemyListNode != null)
+            {
+                nextNode = enemyListNode.Next;
+                for (int i = 0; i < Player1.bullets.Count; i++)
+                {
+                    if (Player1.bullets[i].visible)
+                    {
+                        if (enemyListNode.Value.collidesWith(Player1.bullets[i].Position.X, Player1.bullets[i].Position.Y, BULLET_COLLISION_RADIUS))
+                        {
+                            enemyList.Remove(enemyListNode);
+                            recycledEnemies.AddLast(enemyListNode);
+
+                            Player1.bullets[i].visible = false; // Bullet destroyed by hitting enemy
+
+                            break;
+                        }
+                    }
+                }
+                enemyListNode = nextNode;
+            }
         }
 
         /// <summary>
