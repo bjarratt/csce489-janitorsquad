@@ -216,10 +216,10 @@ namespace _2DGame489
             bg = Content.Load<Texture2D>("bg");
 
             //main game screen content
-            myBackground.LoadContent(this.Content, "background");
+            myBackground.LoadContent(this.Content, "Long_background");
             myBackground.Position = new Vector2(0, 0);
 
-            myBackground2.LoadContent(this.Content, "background");
+            myBackground2.LoadContent(this.Content, "Long_background");
             myBackground2.Position = new Vector2(0, myBackground2.Position.Y - myBackground2.Size.Height);
 
             Player1.LoadContent(this.Content);
@@ -547,11 +547,12 @@ namespace _2DGame489
             }
 
             //these if-statements shuffle the pictures as they go out of view
+            
             if (myBackground2.Position.Y > MAX_WINY)
-                myBackground2.Position.Y = -myBackground2.Size.Height;
+                myBackground2.Position.Y = (-myBackground2.Size.Height);
             if (myBackground.Position.Y > MAX_WINY)
-                myBackground.Position.Y = -myBackground.Size.Height;
-
+                myBackground.Position.Y = (-myBackground.Size.Height);
+            
             Player1.Update(gameTime);
 
             // Perform collision detection
