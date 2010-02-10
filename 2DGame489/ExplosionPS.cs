@@ -5,6 +5,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace _2DGame489
 {
@@ -15,6 +16,11 @@ namespace _2DGame489
         {
             base.scroll_speed = 200;
         }
+
+        //sound stuff
+        AudioEngine audioEngine;
+        WaveBank waveBank;
+        SoundBank soundBank;
 
         /// <summary>
         /// Set up the constants
@@ -49,11 +55,17 @@ namespace _2DGame489
             // additive blending is very good at creating fiery effects.
             spriteBlendMode = SpriteBlendMode.Additive;
 
+            //load audio
+            audioEngine = new AudioEngine("Content/2DGame489Audio.xgs");
+            waveBank = new WaveBank(audioEngine, "Content/Wave Bank.xwb");
+            soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+
             DrawOrder = AdditiveDrawOrder;
         }
 
         protected override void InitializeParticle(Particle p, Vector2 where)
         {
+            soundBank.PlayCue("explosion");
             base.InitializeParticle(p, where);
             
             p.Acceleration = -p.Velocity / p.Lifetime;
