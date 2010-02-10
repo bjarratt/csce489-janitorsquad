@@ -1,5 +1,6 @@
 using System;
 using System.Runtime;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -21,6 +22,9 @@ namespace _2DGame489
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        AudioEngine audioEngine;
+        WaveBank waveBank;
+        SoundBank soundBank;
         public SpriteBatch SpriteBatch
         {
             get { return spriteBatch; }
@@ -227,6 +231,11 @@ namespace _2DGame489
             smallObstacleLoader.LoadContent(this.Content);
             smallDestroyedObstacleLoader.LoadContent(this.Content);
             enemyLoader.LoadContent(this.Content);
+
+            //add audio content here
+            audioEngine = new AudioEngine("Content/2DGame489Audio.xgs");
+            waveBank = new WaveBank(audioEngine, "Content/Wave Bank.xwb");
+            soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
         }
 
         /// <summary>
@@ -381,6 +390,7 @@ namespace _2DGame489
             {
                 if (enemyListNode.Value.state == EnemyAiState.Caught)
                 {
+                    soundBank.PlayCue("hit");
                     Player1.Jeep_health -= 10;
                     Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
 
@@ -410,6 +420,9 @@ namespace _2DGame489
 
             //Update Health Bar
             HBar.Update(gameTime);
+
+            //update audioEngine
+            audioEngine.Update();
 
             switch (mCurrentScreen)
             {
@@ -441,6 +454,7 @@ namespace _2DGame489
                         //up and down depending on what key the user has pressed
                         if (aKeyboardState.IsKeyDown(Keys.Down) == true && mPreviousKeyboardState.IsKeyDown(Keys.Down) == false)
                         {
+                            soundBank.PlayCue("select");
                             //Move selection down
                             switch (mCurrentMenuOption)
                             {
@@ -455,6 +469,7 @@ namespace _2DGame489
 
                         if (aKeyboardState.IsKeyDown(Keys.Up) == true && mPreviousKeyboardState.IsKeyDown(Keys.Up) == false)
                         {
+                            soundBank.PlayCue("select");
                             //Move selection up
                             switch (mCurrentMenuOption)
                             {
@@ -531,14 +546,6 @@ namespace _2DGame489
                 enemyListNode = enemyListNode.Next;
             }
 
-            /*// Update enemies based on scrolling background
-            LinkedListNode<Enemy> enemyListNode = enemyList.First;
-            while (enemyListNode != null)
-            {
-                enemyListNode.Value.Position += distanceTravelled;
-                enemyListNode = enemyListNode.Next;
-            }*/
-
             //these if-statements shuffle the pictures as they go out of view
             if (myBackground2.Position.Y > MAX_WINY)
                 myBackground2.Position.Y = -myBackground2.Size.Height;
@@ -554,10 +561,7 @@ namespace _2DGame489
             
             turretReticle.Update(gameTime);
 
-            if (mCurrentScreen == Screen.Main)
-            {
-                base.Update(gameTime);
-            }
+            base.Update(gameTime);
         }
 
         private void processBulletHits()

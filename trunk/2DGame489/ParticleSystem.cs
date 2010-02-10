@@ -5,6 +5,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace _2DGame489
 {
@@ -52,7 +53,6 @@ namespace _2DGame489
         {
             get { return freeParticles.Count; }
         }
-
 
         // This region of values control the "look" of the particle system, and should 
         // be set by deriving particle systems in the InitializeConstants method. The

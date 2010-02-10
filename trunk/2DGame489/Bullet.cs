@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace _2DGame489
 {
@@ -21,11 +22,21 @@ namespace _2DGame489
         Vector2 speed; 
         Vector2 direction;
 
+        //sound stuff
+        AudioEngine audioEngine;
+        WaveBank waveBank;
+        SoundBank soundBank;
+
         public void LoadContent(ContentManager theContentManager)
         {
             base.LoadContent(theContentManager, BULLET_ASSET_NAME);
             Scale = 1.0f;
             is_projectile = true;   //bullet is a projectile
+
+            //load audio
+            audioEngine = new AudioEngine("Content/2DGame489Audio.xgs");
+            waveBank = new WaveBank(audioEngine, "Content/Wave Bank.xwb");
+            soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
         }
 
         public void Update(GameTime theGameTime)
@@ -44,6 +55,7 @@ namespace _2DGame489
         {
             if (visible == true)
             {
+                soundBank.PlayCue("gunfire");
                 base.Draw(theSpriteBatch);  //call Sprite.Draw only if the bullet is visible
             }
         }
