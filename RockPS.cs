@@ -23,26 +23,29 @@ namespace DinoEscape
         {
             textureFilename = "rocksmoke";
 
-            // pretty slow
+            //smoke is slow
             minInitialSpeed = 20;
             maxInitialSpeed = 200;
 
+            //accelerates away from explosion
             minAcceleration = -10;
             maxAcceleration = -50;
 
+            //longer lived
             minLifetime = 1.0f;
             maxLifetime = 1.5f;
 
             minScale = 0.2f;
             maxScale = 0.5f;
 
+            //thin smoke
             minNumParticles = 6;
             maxNumParticles = 8;
 
+            //average rotation
             minRotationSpeed = -MathHelper.PiOver4;
             maxRotationSpeed = MathHelper.PiOver4;
 
-            // alpha blending is very good at creating smoke effects.
             spriteBlendMode = SpriteBlendMode.AlphaBlend;
 
             DrawOrder = AlphaBlendDrawOrder;
@@ -57,8 +60,6 @@ namespace DinoEscape
         {
             base.InitializeParticle(p, where);
 
-            // the base is mostly good, but we want to simulate a little bit of wind
-            // heading down.
             p.Acceleration.Y += GameplayScreen.RandomBetween(10, 50);
         }
     }

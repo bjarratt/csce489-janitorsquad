@@ -23,26 +23,31 @@ namespace DinoEscape
         {
             textureFilename = "dirtsmoke";
 
-            // pretty slow
+            //constants define effect behavior
+            //smoke is relatively slow
             minInitialSpeed = 20;
             maxInitialSpeed = 120;
 
+            //no acceleration
             minAcceleration = 0;
             maxAcceleration = 0;
 
+            //short lifetime so there's not a huge smoke cloud trailing you
             minLifetime = 0.3f;
             maxLifetime = 0.5f;
 
+            //pretty small since the cloud is kicked up by tires
             minScale = 0.2f;
             maxScale = 0.3f;
 
+            //medium number of particles
             minNumParticles = 8;
             maxNumParticles = 10;
 
+            //moderate rotation to simulate smoke
             minRotationSpeed = -MathHelper.PiOver4;
             maxRotationSpeed = MathHelper.PiOver4;
 
-            // alpha blending is very good at creating smoke effects.
             spriteBlendMode = SpriteBlendMode.AlphaBlend;
 
             DrawOrder = AlphaBlendDrawOrder;
@@ -58,7 +63,7 @@ namespace DinoEscape
             // Point the particles somewhere between 260 and 280 degrees.
             // tweak this to make the dirt have more or less spread.
             float radians = GameplayScreen.RandomBetween(
-                MathHelper.ToRadians(200), MathHelper.ToRadians(320));
+                MathHelper.ToRadians(200), MathHelper.ToRadians(320));  //give the smoke some spray variance...
 
             Vector2 direction = Vector2.Zero;
             

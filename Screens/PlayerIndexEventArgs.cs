@@ -2,6 +2,7 @@
 //-----------------------------------------------------------------------------
 // PlayerIndexEventArgs.cs
 //
+// Adapted From :
 // XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------

@@ -2,6 +2,7 @@
 //-----------------------------------------------------------------------------
 // GameplayScreen.cs
 //
+// Adapted From :
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
@@ -37,7 +38,7 @@ namespace DinoEscape
 
         GraphicsDeviceManager graphics;
 
-        //Scoring stuff
+        //Scoring stuff...
         int Score = 0;
         string score_string = "0";
         string crystal_col;
@@ -47,7 +48,7 @@ namespace DinoEscape
 
         //Crystal Collection
         int crystals_collected = 0;
-        int crystals_needed = 1;
+        int crystals_needed = 3;
         bool winScreenLoaded = false;
 
         //time interval for crystal generation
@@ -61,29 +62,38 @@ namespace DinoEscape
         const int MAX_WINX = 800;
         const int MAX_WINY = 750;
 
+        //Scrolling Background Sprites
         Sprite myBackground;
         Sprite myBackground2;
         Sprite winBackground;
+
+        //Player Sprite
         Jeep Player1;
+
+        //Player Reticule
         Reticle turretReticle;
 
+        //List of obstacles
         LinkedList<Obstacle> obstacleList;
         LinkedList<Obstacle> recycledObstacles;
 
+        //List of Enemies
         LinkedList<Enemy> enemyList;
         LinkedList<Enemy> recycledEnemies;
 
         Obstacle smallObstacleLoader; // Used to load the first instance of a small obstacle
-        //Obstacle smallDestroyedObstacleLoader;
         Enemy enemyLoader;
 
         HealthBar HBar;
+
+        //Scoring Text Sprites
         SpriteFont score_font;
         SpriteFont crystal_font;
 
         //enemy object and position info
         private EnemyStats RAPTOR_STATS;
 
+        //Particle Effects
         ExplosionPS explosion;
         ExplosionSmokePS explosion_smoke;
         MuzzleFlashPS muzzleflash;
@@ -144,8 +154,6 @@ namespace DinoEscape
         Vector2 playerPosition = new Vector2(100, 100);
         Vector2 enemyPosition = new Vector2(100, 100);
 
-        //Random random = new Random();
-
         #endregion
 
         #region Initialization
@@ -160,7 +168,6 @@ namespace DinoEscape
             //ScreenManager.Game.Content.RootDirectory = "Content";
 
             // create the particle systems and add them to the components list.
-            // 
             explosion = new ExplosionPS(ScreenManager.Game, 2, ScreenManager.SpriteBatch);
             ScreenManager.Game.Components.Add(explosion);
 
@@ -211,28 +218,35 @@ namespace DinoEscape
         /// </summary>
         protected void Initialize()
         {
+            //init background sprites
             myBackground = new Sprite();
             myBackground2 = new Sprite();
             winBackground = new Sprite();
 
+            //init text sprites
             score_font = this.ScreenManager.Font2;
             crystal_font = this.ScreenManager.Font2;
 
+            //init player sprite
             Player1 = new Jeep();
             //give the Jeep a reference to the muzzleflash component
             Player1.muzz = muzzleflash;
+            //give the Jeep a reference to the dirtcloud component
             Player1.dirt_cloud = dirt;
-            //Player1.Scale = 0.5f;
 
+            //init health bar
             HBar = new HealthBar(this.ScreenManager.Game, Player1);
 
+            //init reticule
             turretReticle = new Reticle();
 
             this.previousY = 0;
 
+            //init obstacle lists
             obstacleList = new LinkedList<Obstacle>();
             recycledObstacles = new LinkedList<Obstacle>();
 
+            //init enemy lists
             enemyList = new LinkedList<Enemy>();
             recycledEnemies = new LinkedList<Enemy>();
 
@@ -241,6 +255,7 @@ namespace DinoEscape
 
             enemyLoader = new Enemy("raptor", this.RAPTOR_STATS);
 
+            //init random number generator
             randNumGenerator = new Random();
 
             this.winScreenLoaded = false;
@@ -255,9 +270,6 @@ namespace DinoEscape
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             gameFont = content.Load<SpriteFont>("pericles");
-
-            // Create a new SpriteBatch, which can be used to draw textures.
-            //spriteBatch = new SpriteBatch(ScreenManager.Game.GraphicsDevice);
 
             //main game screen content
             myBackground.LoadContent(content, "Long_background");
@@ -306,6 +318,9 @@ namespace DinoEscape
 
         #region Update and Draw
 
+        // This function generates a new crystal every 20 seconds at a random X
+        // position.  It also checks to make sure that the crystal is not placed
+        // on top of an already existing obstacle.
         protected void generateCrystals(float yVal, GameTime theGameTime)
         {
             float dt = (float)theGameTime.ElapsedGameTime.TotalSeconds;
@@ -315,15 +330,19 @@ namespace DinoEscape
                 LinkedListNode<Obstacle> obNode;
                 if (recycledObstacles.Count == 0)
                 {
+                    //if no objects are recyclible, then make a new one
                     obNode = new LinkedListNode<Obstacle>(new Obstacle("crystal"));
+                    //reset time
                     time = 0.0f;
                 }
                 else
                 {
+                    //use an old obstacle again
                     obNode = recycledObstacles.First;
                     recycledObstacles.RemoveFirst();
                     obNode.Value.AssetName = "crystal";
                     obNode.Value.type = ObType.Crystal;
+                    //reset time
                     time = 0.0f;
                 }
                 obNode.Value.Position.X = RandomBetween(0.0f, 800.0f);
@@ -347,6 +366,9 @@ namespace DinoEscape
             }
         }
 
+        // This function generates a new row of obstacles by placing them randomly within
+        // the bounds of the screen.  The frequency of their appearance is based completely 
+        // on the probability constants set above.
         protected void generateNewRow(float yVal, GameTime theGameTime)
         {
             //obstacleList.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
@@ -386,6 +408,8 @@ namespace DinoEscape
             }
         }
 
+        // This function works in very much the same way that generateNewRow works.
+        // The only real difference is it generates enemies rather than obstacles.
         protected void generateNewEnemies(float yVal)
         {
             double randomNum;
@@ -408,13 +432,7 @@ namespace DinoEscape
                         enemyNode.Value.state = EnemyAiState.Chasing;
                         enemyNode.Value.stats = this.RAPTOR_STATS;
                     }
-                    /*
-                    if (randomNum < ENEMY_DINO2_ODDS * ENEMY_PLACEMENT_ODDS)
-                    {
-                        enemyNode.Value.AssetName = "obstacle_log";
-                        i++;
-                    }
-                    */
+                    
                     enemyNode.Value.Position.X = i * UNIT_OBJECT_WIDTH;
                     enemyNode.Value.Position.Y = yVal;
                     enemyNode.Value.LoadContent(content);
@@ -470,9 +488,8 @@ namespace DinoEscape
                     obstacleList.Remove(obstacleMatrixNode);
                     recycledObstacles.AddLast(obstacleMatrixNode);
 
-
-
-                    //make big explosion
+                    //make Particle effect depending on the type of object hit...
+                    //update score as well...
                     if (currentOb.type != ObType.Crystal)
                     {
                         Score -= 489;    //not so arbitrary number
@@ -511,16 +528,21 @@ namespace DinoEscape
                     //check if dead
                     if (Player1.Jeep_health == 0)
                     {
+                        //make big explosion
                         Vector2 whereat;
                         whereat.X = Player1.Position.X + Player1.Size.Width / 2;
                         whereat.Y = Player1.Position.Y + Player1.Size.Height / 2;
                         explosion.AddParticles(whereat);
                         //ScreenManager.RemoveScreen(this);
                         this.ScreenState = ScreenState.Hidden;
+                        //destroy the soundbank to kill the music
                         soundBank.Dispose();
+                        //make new soundbank to play new sound
                         soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
                         soundBank.PlayCue("gameover");
-                        GameOver.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+                        //call function which loads the GameOver screen and then takes you
+                        //back to the main menu...
+                        GameOver.Load(ScreenManager, null, new BackgroundScreen(), new MainMenuScreen());
                     }
                 }
                 obstacleMatrixNode = nextNode;
@@ -549,7 +571,7 @@ namespace DinoEscape
                         soundBank.Dispose();
                         soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
                         soundBank.PlayCue("gameover");
-                        GameOver.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+                        GameOver.Load(ScreenManager, null, new BackgroundScreen(), new MainMenuScreen());
                     }
 
                     Score -= 489;
@@ -614,13 +636,6 @@ namespace DinoEscape
             {
                 Vector2 distanceTravelled = SCROLL_SPEED * SCROLL_DIR * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-
-                //// Allows the game to exit
-                //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                //    this.Exit();
-                //if (Keyboard.GetState(PlayerIndex.One).IsKeyDown(Keys.Escape))
-                //    this.Exit();
-
                 //Update Health Bar
                 HBar.Update(gameTime);
 
@@ -634,7 +649,6 @@ namespace DinoEscape
                     obstacleListNode.Value.Position += distanceTravelled;
                     obstacleListNode = obstacleListNode.Next;
                 }
-
 
                 // Create a new row of obstacles and enemies, if needed
                 if ((this.previousY + distanceTravelled.Y) >= UNIT_OBJECT_HEIGHT)
@@ -659,11 +673,10 @@ namespace DinoEscape
                     enemyListNode = enemyListNode.Next;
                 }
 
-
                 //these if-statements shuffle the pictures as they go out of view
                 if (crystals_collected >= crystals_needed)
                 {
-                    //enough crystals have been collected
+                    //enough crystals have been collected to engage end-game
                     if (!this.winScreenLoaded)
                     {
                         //set the initial position of the win screen
@@ -690,12 +703,9 @@ namespace DinoEscape
                                 GameWon.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
                             }
                         }
-                        //myBackground.Position += distanceTravelled;
-                        //myBackground2.Position += distanceTravelled;
                     }
                 }
-                //else
-                //{
+
                 myBackground.Position += distanceTravelled;
                 myBackground2.Position += distanceTravelled;
 
@@ -703,7 +713,6 @@ namespace DinoEscape
                     myBackground2.Position.Y = (-myBackground2.Size.Height);
                 if (myBackground.Position.Y > MAX_WINY)
                     myBackground.Position.Y = (-myBackground.Size.Height);
-                //}
 
                 Player1.Update(gameTime);
 
@@ -825,8 +834,10 @@ namespace DinoEscape
             // Draw reticle
             turretReticle.Draw(spriteBatch);
 
+            // Draw Healthbar
             HBar.Draw(spriteBatch);
 
+            // Draw scores
             spriteBatch.DrawString(score_font, "Score: " + score_string, score_pos, Color.White);
             spriteBatch.DrawString(crystal_font, "Crystals: " + crystal_col + " / " + crystal_need, crystal_pos, Color.Yellow);
 

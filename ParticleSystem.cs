@@ -19,10 +19,10 @@ namespace DinoEscape
         public const int AlphaBlendDrawOrder = 100;
         public const int AdditiveDrawOrder = 200;
 
-        // a reference to the main game; we'll keep this around because it exposes a
-        // content manager and a sprite batch for us to use.
+        // do we really need this?  Maybe not...
         private Game game;
 
+        // spriteBatch from the main GameplayScreen
         private SpriteBatch spriteBatch;
 
         // the texture this particle system will use.

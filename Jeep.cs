@@ -31,9 +31,10 @@ namespace DinoEscape
         public List<Bullet> bullets = new List<Bullet>();  //bullets for the turret
         ContentManager mContentManager;     //will be used to create new bullets when we need them
 
+        //Turret is part of the Jeep...
         Turret Jeep_Turret = new Turret();  //gun turret for jeep
 
-        //Muzzle Flash particle effect reference from main GameplayScreen class
+        //Muzzle Flash and DirtCloud particle effect references from main GameplayScreen class
         public MuzzleFlashPS muzz;
         public DirtCloudPS dirt_cloud;
 

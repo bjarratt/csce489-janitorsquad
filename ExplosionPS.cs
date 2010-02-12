@@ -29,30 +29,31 @@ namespace DinoEscape
         {
             textureFilename = "explosion";
 
-            // high initial speed with lots of variance.  make the values closer
-            // together to have more consistently circular explosions.
+            //Lots of variance with high speed for explosions 
             minInitialSpeed = 40;
             maxInitialSpeed = 500;
 
-            // doesn't matter what these values are set to, acceleration is tweaked in
-            // the override of InitializeParticle.
+            //no acceleration
             minAcceleration = 0;
             maxAcceleration = 0;
 
-            // explosions should be relatively short lived
+            //short to medium lifetime
             minLifetime = .5f;
             maxLifetime = 1.0f;
 
+            //lots of variance in size to make each one unpredictable in shape
             minScale = .3f;
             maxScale = 1.0f;
 
+            //lots of particles
             minNumParticles = 20;
             maxNumParticles = 25;
 
+            //moderate rotation
             minRotationSpeed = -MathHelper.PiOver4;
             maxRotationSpeed = MathHelper.PiOver4;
 
-            // additive blending is very good at creating fiery effects.
+            //additive blending for fire effects
             spriteBlendMode = SpriteBlendMode.Additive;
 
             //load audio
