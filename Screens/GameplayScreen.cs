@@ -48,7 +48,7 @@ namespace DinoEscape
 
         //Crystal Collection
         int crystals_collected = 0;
-        int crystals_needed = 4;
+        int crystals_needed = 10;
         bool winScreenLoaded = false;
 
         //time interval for crystal generation
