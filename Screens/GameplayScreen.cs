@@ -42,6 +42,11 @@ namespace GameStateManagement
         {
             get { return spriteBatch; }
         }*/
+
+        //Sound stuff!
+        AudioEngine audioEngine;
+        WaveBank waveBank;
+        protected SoundBank soundBank;
         
         const int MAX_WINX = 800;
         const int MAX_WINY = 750;
@@ -174,6 +179,11 @@ namespace GameStateManagement
             this.RAPTOR_STATS.caughtDistance = 60.0f;
             this.RAPTOR_STATS.hysteresis = 15.0f;
 
+            // initialize sound manager objects
+            audioEngine = new AudioEngine("Content/gameAudio.xgs");
+            waveBank = new WaveBank(audioEngine, "Content/Wave Bank.xwb");
+            soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
@@ -242,6 +252,9 @@ namespace GameStateManagement
             HBar.LoadContent(content);
 
             turretReticle.LoadContent(content);
+
+            // Start the sound!
+            soundBank.PlayCue("Dino Escape Main Loop");
 
             smallObstacleLoader.LoadContent(content);
             //smallDestroyedObstacleLoader.LoadContent(content);
