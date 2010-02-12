@@ -9,6 +9,8 @@
 
 #region Using Statements
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+
 #endregion
 
 namespace GameStateManagement
@@ -67,13 +69,19 @@ namespace GameStateManagement
             ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
         }
 
+        public override void LoadContent()
+        {
+            // Start the sound!
+            soundBank.PlayCue("Dino Escape Loop Intro");
+            base.LoadContent();
+        }
 
         /// <summary>
         /// When the user cancels the main menu, ask if they want to exit the sample.
         /// </summary>
         protected override void OnCancel(PlayerIndex playerIndex)
         {
-            const string message = "Are you sure you want to exit this sample?";
+            const string message = "Are you sure you want to exit the game?";
 
             MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message);
 
@@ -81,7 +89,6 @@ namespace GameStateManagement
 
             ScreenManager.AddScreen(confirmExitMessageBox, playerIndex);
         }
-
 
         /// <summary>
         /// Event handler for when the user selects ok on the "are you sure

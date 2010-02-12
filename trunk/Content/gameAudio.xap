@@ -225,15 +225,21 @@ Wave Bank
     Windows Bank Path Edited = 0;
     Seek Tables = 1;
     Compression Preset Name = <none>;
-    Bank Last Revised Low = 4263068711;
-    Bank Last Revised High = 30059415;
+    Xbox Bank Last Modified Low = 0;
+    Xbox Bank Last Modified High = 0;
+    PC Bank Last Modified Low = 0;
+    PC Bank Last Modified High = 0;
+    Header Last Modified Low = 0;
+    Header Last Modified High = 0;
+    Bank Last Revised Low = 2139772418;
+    Bank Last Revised High = 30059442;
 
     Wave
     {
         Name = collect;
         File = audio\collect.wav;
-        Build Settings Last Modified Low = 4190881673;
-        Build Settings Last Modified High = 30059415;
+        Build Settings Last Modified Low = 70989714;
+        Build Settings Last Modified High = 30059441;
 
         Cache
         {
@@ -246,8 +252,8 @@ Wave Bank
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 602444220;
-            Last Modified High = 30059380;
+            Last Modified Low = 480332010;
+            Last Modified High = 30059440;
         }
     }
 
@@ -255,8 +261,8 @@ Wave Bank
     {
         Name = Dino Escape End Theme;
         File = audio\Dino Escape End Theme.wav;
-        Build Settings Last Modified Low = 4190881673;
-        Build Settings Last Modified High = 30059415;
+        Build Settings Last Modified Low = 70989714;
+        Build Settings Last Modified High = 30059441;
 
         Cache
         {
@@ -269,8 +275,8 @@ Wave Bank
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 600216460;
-            Last Modified High = 30059380;
+            Last Modified Low = 480175760;
+            Last Modified High = 30059440;
         }
     }
 
@@ -278,8 +284,8 @@ Wave Bank
     {
         Name = Dino Escape Loop Intro;
         File = audio\Dino Escape Loop Intro.wav;
-        Build Settings Last Modified Low = 4191037922;
-        Build Settings Last Modified High = 30059415;
+        Build Settings Last Modified Low = 70989714;
+        Build Settings Last Modified High = 30059441;
 
         Cache
         {
@@ -292,8 +298,8 @@ Wave Bank
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 637658980;
-            Last Modified High = 30059380;
+            Last Modified Low = 482519510;
+            Last Modified High = 30059440;
         }
     }
 
@@ -301,8 +307,8 @@ Wave Bank
     {
         Name = Dino Escape Main Loop;
         File = audio\Dino Escape Main Loop.wav;
-        Build Settings Last Modified Low = 4191194171;
-        Build Settings Last Modified High = 30059415;
+        Build Settings Last Modified Low = 70989714;
+        Build Settings Last Modified High = 30059441;
 
         Cache
         {
@@ -315,31 +321,8 @@ Wave Bank
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 626390260;
-            Last Modified High = 30059380;
-        }
-    }
-
-    Wave
-    {
-        Name = explosion;
-        File = audio\explosion.wav;
-        Build Settings Last Modified Low = 4191194171;
-        Build Settings Last Modified High = 30059415;
-
-        Cache
-        {
-            Format Tag = 0;
-            Channels = 1;
-            Sampling Rate = 11025;
-            Bits Per Sample = 0;
-            Play Region Offset = 44;
-            Play Region Length = 23540;
-            Loop Region Offset = 0;
-            Loop Region Length = 0;
-            File Type = 1;
-            Last Modified Low = 638588050;
-            Last Modified High = 30059380;
+            Last Modified Low = 481582010;
+            Last Modified High = 30059440;
         }
     }
 
@@ -347,22 +330,22 @@ Wave Bank
     {
         Name = gunfire;
         File = audio\gunfire.wav;
-        Build Settings Last Modified Low = 4191350420;
-        Build Settings Last Modified High = 30059415;
+        Build Settings Last Modified Low = 70989714;
+        Build Settings Last Modified High = 30059441;
 
         Cache
         {
             Format Tag = 0;
-            Channels = 1;
-            Sampling Rate = 44100;
+            Channels = 2;
+            Sampling Rate = 11025;
             Bits Per Sample = 1;
             Play Region Offset = 44;
-            Play Region Length = 4432;
+            Play Region Length = 28212;
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 628687950;
-            Last Modified High = 30059380;
+            Last Modified Low = 994321832;
+            Last Modified High = 30059433;
         }
     }
 
@@ -370,8 +353,8 @@ Wave Bank
     {
         Name = hit;
         File = audio\hit.wav;
-        Build Settings Last Modified Low = 4191506669;
-        Build Settings Last Modified High = 30059415;
+        Build Settings Last Modified Low = 70989714;
+        Build Settings Last Modified High = 30059441;
 
         Cache
         {
@@ -384,8 +367,31 @@ Wave Bank
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 601345320;
-            Last Modified High = 30059380;
+            Last Modified Low = 480332010;
+            Last Modified High = 30059440;
+        }
+    }
+
+    Wave
+    {
+        Name = log_break;
+        File = audio\log_break.wav;
+        Build Settings Last Modified Low = 70989714;
+        Build Settings Last Modified High = 30059441;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 2;
+            Sampling Rate = 11025;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 27320;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 498969358;
+            Last Modified High = 30059427;
         }
     }
 
@@ -393,8 +399,8 @@ Wave Bank
     {
         Name = select;
         File = audio\select.wav;
-        Build Settings Last Modified Low = 4191506669;
-        Build Settings Last Modified High = 30059415;
+        Build Settings Last Modified Low = 70989714;
+        Build Settings Last Modified High = 30059441;
 
         Cache
         {
@@ -407,8 +413,31 @@ Wave Bank
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 627559120;
-            Last Modified High = 30059380;
+            Last Modified Low = 481738260;
+            Last Modified High = 30059440;
+        }
+    }
+
+    Wave
+    {
+        Name = rock_smash;
+        File = audio\rock_smash.wav;
+        Build Settings Last Modified Low = 2096803668;
+        Build Settings Last Modified High = 30059442;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 2;
+            Sampling Rate = 11025;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 56580;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 2333983898;
+            Last Modified High = 30059437;
         }
     }
 }
@@ -420,6 +449,8 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
+    Header Last Modified High = 0;
+    Header Last Modified Low = 0;
 
     Sound
     {
@@ -469,7 +500,7 @@ Sound Bank
 
     Sound
     {
-        Name = gunfire;
+        Name = log_break;
         Volume = -1200;
         Pitch = 0;
         Priority = 0;
@@ -504,8 +535,8 @@ Sound Bank
                 {
                     Bank Name = Wave Bank;
                     Bank Index = 0;
-                    Entry Name = gunfire;
-                    Entry Index = 5;
+                    Entry Name = log_break;
+                    Entry Index = 6;
                     Weight = 255;
                     Weight Min = 0;
                 }
@@ -551,7 +582,7 @@ Sound Bank
                     Bank Name = Wave Bank;
                     Bank Index = 0;
                     Entry Name = hit;
-                    Entry Index = 6;
+                    Entry Index = 5;
                     Weight = 255;
                     Weight Min = 0;
                 }
@@ -561,8 +592,8 @@ Sound Bank
 
     Sound
     {
-        Name = explosion;
-        Volume = -3000;
+        Name = gunfire;
+        Volume = -2500;
         Pitch = 0;
         Priority = 0;
 
@@ -596,7 +627,7 @@ Sound Bank
                 {
                     Bank Name = Wave Bank;
                     Bank Index = 0;
-                    Entry Name = explosion;
+                    Entry Name = gunfire;
                     Entry Index = 4;
                     Weight = 255;
                     Weight Min = 0;
@@ -789,6 +820,52 @@ Sound Bank
         }
     }
 
+    Sound
+    {
+        Name = rock_smash;
+        Volume = -3500;
+        Pitch = 0;
+        Priority = 0;
+
+        Category Entry
+        {
+            Name = Default;
+        }
+
+        Track
+        {
+            Volume = 0;
+
+            Play Wave Event
+            {
+                Break Loop = 0;
+                Use Speaker Position = 0;
+                Use Center Speaker = 1;
+                New Speaker Position On Loop = 1;
+                Speaker Position Angle = 0.000000;
+                Speaer Position Arc = 0.000000;
+
+                Event Header
+                {
+                    Timestamp = 0;
+                    Relative = 0;
+                    Random Recurrence = 0;
+                    Random Offset = 0;
+                }
+
+                Wave Entry
+                {
+                    Bank Name = Wave Bank;
+                    Bank Index = 0;
+                    Entry Name = rock_smash;
+                    Entry Index = 8;
+                    Weight = 255;
+                    Weight Min = 0;
+                }
+            }
+        }
+    }
+
     Cue
     {
         Name = select;
@@ -811,7 +888,7 @@ Sound Bank
 
     Cue
     {
-        Name = gunfire;
+        Name = log_break;
 
         Variation
         {
@@ -822,7 +899,7 @@ Sound Bank
 
         Sound Entry
         {
-            Name = gunfire;
+            Name = log_break;
             Index = 1;
             Weight Min = 0;
             Weight Max = 255;
@@ -851,7 +928,7 @@ Sound Bank
 
     Cue
     {
-        Name = explosion;
+        Name = gunfire;
 
         Variation
         {
@@ -862,7 +939,7 @@ Sound Bank
 
         Sound Entry
         {
-            Name = explosion;
+            Name = gunfire;
             Index = 3;
             Weight Min = 0;
             Weight Max = 255;
@@ -944,6 +1021,26 @@ Sound Bank
         {
             Name = collect;
             Index = 7;
+            Weight Min = 0;
+            Weight Max = 255;
+        }
+    }
+
+    Cue
+    {
+        Name = rock_smash;
+
+        Variation
+        {
+            Variation Type = 3;
+            Variation Table Type = 1;
+            New Variation on Loop = 0;
+        }
+
+        Sound Entry
+        {
+            Name = rock_smash;
+            Index = 8;
             Weight Min = 0;
             Weight Max = 255;
         }
