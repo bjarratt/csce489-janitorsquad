@@ -579,7 +579,7 @@ namespace GameStateManagement
                 LinkedListNode<Enemy> enemyListNode = enemyList.First;
                 while (enemyListNode != null)
                 {
-                    enemyListNode.Value.Update(gameTime, Player1.Position + new Vector2(Player1.Size.Width / 2.0f, Player1.Size.Height / 2.0f));
+                    enemyListNode.Value.Update(gameTime, Player1.Position + new Vector2(Player1.Size.Width / 2.0f, Player1.Size.Height / 2.0f), content);
                     enemyListNode = enemyListNode.Next;
                 }
 

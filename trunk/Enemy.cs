@@ -50,6 +50,11 @@ namespace GameStateManagement
 
         private bool boundingCirclesUpdated;
 
+        private int currentAnimationFrame; // Determines when to move the dino's legs
+
+        private List<string> runningAnimationFrames;
+
+        private const int FRAMES_IN_RUN_CYCLE = 24; // Must be divisible by the number of animation frames (four, in this case)
 
         public EnemyStats stats;
 
@@ -66,6 +71,13 @@ namespace GameStateManagement
             this.firstCollisionCircleCenter = new Vector2();
             this.lastCollisionCircleCenter = new Vector2();
             this.toLastCircle = new Vector2();
+
+            this.currentAnimationFrame = 0;
+            runningAnimationFrames = new List<string>();
+            runningAnimationFrames.Add("raptor");
+            runningAnimationFrames.Add("raptor_left");
+            runningAnimationFrames.Add("raptor");
+            runningAnimationFrames.Add("raptor_right");
         }
 
         public void LoadContent(ContentManager theContentManager)
@@ -76,8 +88,16 @@ namespace GameStateManagement
             this.boundingCirclesUpdated = false;
         }
 
-        public void Update(GameTime theGameTime, Vector2 jeepPosition)
+        public void Update(GameTime theGameTime, Vector2 jeepPosition, ContentManager theContentManager)
         {
+            if (this.currentAnimationFrame % (FRAMES_IN_RUN_CYCLE / runningAnimationFrames.Count) == 0)
+            {
+                this.AssetName = runningAnimationFrames[this.currentAnimationFrame / (FRAMES_IN_RUN_CYCLE / runningAnimationFrames.Count)];
+                this.LoadContent(theContentManager, this.AssetName);
+            }
+
+            this.currentAnimationFrame = (this.currentAnimationFrame + 1) % FRAMES_IN_RUN_CYCLE;
+
             // First we have to use the current state to decide what the thresholds are
             // for changing state, as described in the doc.
 
