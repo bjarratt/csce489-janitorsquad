@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Audio;
 
 #endregion
 
-namespace GameStateManagement
+namespace DinoEscape
 {
     /// <summary>
     /// The main menu screen is the first thing displayed when the game starts up.

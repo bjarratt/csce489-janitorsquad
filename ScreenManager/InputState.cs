@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 #endregion
 
-namespace GameStateManagement
+namespace DinoEscape
 {
     /// <summary>
     /// Helper for reading input from keyboard and gamepad. This class tracks both

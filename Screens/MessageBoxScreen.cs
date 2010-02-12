@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace GameStateManagement
+namespace DinoEscape
 {
     /// <summary>
     /// A popup message box screen, used to display "are you sure?"

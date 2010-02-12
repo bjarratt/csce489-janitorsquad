@@ -24,7 +24,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 #endregion
 
-namespace GameStateManagement
+namespace DinoEscape
 {
     /// <summary>
     /// This screen implements the actual game logic. It is just a

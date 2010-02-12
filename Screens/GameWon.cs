@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace GameStateManagement
+namespace DinoEscape
 {
     class GameWon : GameScreen
     {
