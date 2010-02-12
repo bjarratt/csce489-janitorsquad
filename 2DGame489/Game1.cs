@@ -32,7 +32,7 @@ namespace _2DGame489
         }
 
         const int MAX_WINX = 800;
-        const int MAX_WINY = 600;
+        const int MAX_WINY = 750;
 
         Sprite myBackground;
         Sprite myBackground2;
@@ -134,6 +134,7 @@ namespace _2DGame489
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferHeight = 750;
 
             // create the particle systems and add them to the components list.
             // 
