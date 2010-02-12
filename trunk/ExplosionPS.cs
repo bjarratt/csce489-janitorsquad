@@ -14,7 +14,7 @@ namespace GameStateManagement
         public ExplosionPS(Game game, int howManyEffects, SpriteBatch spriteBatch)
             : base(game, howManyEffects, spriteBatch)
         {
-            base.scroll_speed = 200;
+            base.scroll_speed = 0;
         }
 
         //sound stuff

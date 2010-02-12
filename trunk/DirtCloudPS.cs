@@ -30,11 +30,11 @@ namespace GameStateManagement
             minAcceleration = 0;
             maxAcceleration = 0;
 
-            minLifetime = 0.5f;
-            maxLifetime = 0.8f;
+            minLifetime = 0.3f;
+            maxLifetime = 0.5f;
 
-            minScale = 0.3f;
-            maxScale = 0.4f;
+            minScale = 0.2f;
+            maxScale = 0.3f;
 
             minNumParticles = 8;
             maxNumParticles = 10;
@@ -58,7 +58,7 @@ namespace GameStateManagement
             // Point the particles somewhere between 260 and 280 degrees.
             // tweak this to make the dirt have more or less spread.
             float radians = GameplayScreen.RandomBetween(
-                MathHelper.ToRadians(260), MathHelper.ToRadians(280));
+                MathHelper.ToRadians(200), MathHelper.ToRadians(320));
 
             Vector2 direction = Vector2.Zero;
             

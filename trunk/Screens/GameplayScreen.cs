@@ -36,12 +36,11 @@ namespace GameStateManagement
         #region Fields
 
         GraphicsDeviceManager graphics;
-        /*SpriteBatch spriteBatch;
 
-        public SpriteBatch SpriteBatch
-        {
-            get { return spriteBatch; }
-        }*/
+        //Crystal Collection
+        int crystals_collected = 0;
+        int crystals_needed = 1;
+        bool winScreenLoaded = false;
 
         //time interval for crystal generation
         float time = 0;
@@ -50,12 +49,13 @@ namespace GameStateManagement
         AudioEngine audioEngine;
         WaveBank waveBank;
         protected SoundBank soundBank;
-        
+
         const int MAX_WINX = 800;
         const int MAX_WINY = 750;
 
         Sprite myBackground;
         Sprite myBackground2;
+        Sprite winBackground;
         Jeep Player1;
         Reticle turretReticle;
 
@@ -203,6 +203,7 @@ namespace GameStateManagement
         {
             myBackground = new Sprite();
             myBackground2 = new Sprite();
+            winBackground = new Sprite();
 
             Player1 = new Jeep();
             //give the Jeep a reference to the muzzleflash component
@@ -228,6 +229,8 @@ namespace GameStateManagement
             enemyLoader = new Enemy("raptor", this.RAPTOR_STATS);
 
             randNumGenerator = new Random();
+
+            this.winScreenLoaded = false;
         }
 
         /// <summary>
@@ -249,6 +252,8 @@ namespace GameStateManagement
 
             myBackground2.LoadContent(content, "Long_background");
             myBackground2.Position = new Vector2(0, myBackground2.Position.Y - myBackground2.Size.Height);
+
+            winBackground.LoadContent(content, "end_screen");
 
             Player1.LoadContent(content);
 
@@ -305,7 +310,7 @@ namespace GameStateManagement
                     obNode = recycledObstacles.First;
                     recycledObstacles.RemoveFirst();
                     obNode.Value.AssetName = "crystal";
-                    obNode.Value.type = (ObType)3;
+                    obNode.Value.type = ObType.Crystal;
                     time = 0.0f;
                 }
                 obNode.Value.Position.X = RandomBetween(0.0f, 800.0f);
@@ -336,14 +341,13 @@ namespace GameStateManagement
                         obNode = recycledObstacles.First;
                         recycledObstacles.RemoveFirst();
                         obNode.Value.AssetName = "obstacle_small";
-                        obNode.Value.type = (ObType)1;
+                        obNode.Value.type = ObType.Rock;
                     }
 
                     if (randomNum < OBSTACLE_LOG_ODDS * OBSTACLE_PLACEMENT_ODDS)
                     {
                         obNode.Value.AssetName = "obstacle_log";
-                        obNode.Value.type = (ObType)2;
-                        i++;
+                        obNode.Value.type = ObType.Log;
                         i += 2; // A log is triple-wide, so it takes an additional 2 places
                     }
 
@@ -439,26 +443,47 @@ namespace GameStateManagement
                     obstacleList.Remove(obstacleMatrixNode);
                     recycledObstacles.AddLast(obstacleMatrixNode);
 
-                    Player1.Jeep_health -= 5;
-                    Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
+
 
                     //make big explosion
                     Vector2 where;
                     where.X = currentOb.Position.X + currentOb.Source.Width / 2;
                     where.Y = currentOb.Position.Y + currentOb.Source.Height / 2;
-                    if (currentOb.type == (ObType)1)
+                    if (currentOb.type == ObType.Rock)
                     {
                         rock_piece.AddParticles(where);
                         rock_smoke.AddParticles(where);
+                        Player1.Jeep_health -= 5;
+                        Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
                     }
-                    else if (currentOb.type == (ObType)2)
+                    else if (currentOb.type == ObType.Log)
                     {
                         log_shard.AddParticles(where);
+                        Player1.Jeep_health -= 5;
+                        Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
+                    }
+                    else if (currentOb.type == ObType.Crystal)
+                    {
+                        //crystal particles
+                        crystals_collected++;
                     }
                     else
                     {
                         rock_piece.AddParticles(where);
                         rock_smoke.AddParticles(where);
+                    }
+
+
+                    //check if dead
+                    if (Player1.Jeep_health == 0)
+                    {
+                        Vector2 whereat;
+                        whereat.X = Player1.Position.X + Player1.Size.Width / 2;
+                        whereat.Y = Player1.Position.Y + Player1.Size.Height / 2;
+                        explosion.AddParticles(whereat);
+                        //ScreenManager.RemoveScreen(this);
+                        this.ScreenState = ScreenState.Hidden;
+                        GameOver.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
                     }
                 }
                 obstacleMatrixNode = nextNode;
@@ -477,6 +502,16 @@ namespace GameStateManagement
                     //soundBank.PlayCue("hit");
                     Player1.Jeep_health -= 10;
                     Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
+                    if (Player1.Jeep_health == 0)
+                    {
+                        Vector2 whereat;
+                        whereat.X = Player1.Position.X + Player1.Size.Width / 2;
+                        whereat.Y = Player1.Position.Y + Player1.Size.Height / 2;
+                        explosion.AddParticles(whereat);
+                        //ScreenManager.RemoveScreen(this);
+                        this.ScreenState = ScreenState.Hidden;
+                        GameOver.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+                    }
 
                     //add blood splash
                     Vector2 where = Vector2.Zero;
@@ -505,14 +540,12 @@ namespace GameStateManagement
                     {
                         if (enemyListNode.Value.collidesWith(Player1.bullets[i].Position.X, Player1.bullets[i].Position.Y, BULLET_COLLISION_RADIUS))
                         {
+                            //add blood splash
+                            Vector2 where = enemyListNode.Value.getCenter();
+                            blood.AddParticles(where);
+
                             enemyList.Remove(enemyListNode);
                             recycledEnemies.AddLast(enemyListNode);
-
-                            //add blood splash
-                            Vector2 where = Vector2.Zero;
-                            where.X = enemyListNode.Value.Position.X + enemyListNode.Value.Size.Height;
-                            where.Y = enemyListNode.Value.Position.Y - enemyListNode.Value.Size.Width;
-                            blood.AddParticles(where);
 
                             Player1.bullets[i].visible = false; // Bullet destroyed by hitting enemy
 
@@ -536,6 +569,8 @@ namespace GameStateManagement
 
             if (IsActive)
             {
+                Vector2 distanceTravelled = SCROLL_SPEED * SCROLL_DIR * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
                 //// Allows the game to exit
                 //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 //    this.Exit();
@@ -545,9 +580,6 @@ namespace GameStateManagement
                 //Update Health Bar
                 HBar.Update(gameTime);
 
-                Vector2 distanceTravelled = SCROLL_SPEED * SCROLL_DIR * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                myBackground.Position += distanceTravelled;
-                myBackground2.Position += distanceTravelled;
 
                 // Perform garbage collection on obstacles
                 garbageCollectObstacles();
@@ -583,12 +615,51 @@ namespace GameStateManagement
                     enemyListNode = enemyListNode.Next;
                 }
 
+
                 //these if-statements shuffle the pictures as they go out of view
+                if (crystals_collected >= crystals_needed)
+                {
+                    //enough crystals have been collected
+                    if (!this.winScreenLoaded)
+                    {
+                        //set the initial position of the win screen
+                        winBackground.Position = new Vector2(0, Math.Min(myBackground.Position.Y, myBackground2.Position.Y) - winBackground.Source.Height);
+                        this.winScreenLoaded = true;
+                    }
+                    else
+                    {
+                        if (winBackground.Position.Y < 0)
+                        {
+                            //continue scrolling the win screen until you reach the goal
+                            winBackground.Position += distanceTravelled;
+                        }
+                        else
+                        {
+                            obstacleList.Clear(); //clear all obstacles once you reach the goal
+                            Player1.Position -= distanceTravelled; //keep the jeep moving forward
+                            soundBank.Dispose();
+                            soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+                            soundBank.PlayCue("Dino Escape End Theme");
+                            if (Player1.Position.Y < 240)
+                            {
+                                //load the completion screen
+                                GameWon.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+                            }
+                        }
+                        //myBackground.Position += distanceTravelled;
+                        //myBackground2.Position += distanceTravelled;
+                    }
+                }
+                //else
+                //{
+                myBackground.Position += distanceTravelled;
+                myBackground2.Position += distanceTravelled;
 
                 if (myBackground2.Position.Y > MAX_WINY)
                     myBackground2.Position.Y = (-myBackground2.Size.Height);
                 if (myBackground.Position.Y > MAX_WINY)
                     myBackground.Position.Y = (-myBackground.Size.Height);
+                //}
 
                 Player1.Update(gameTime);
 
@@ -678,6 +749,10 @@ namespace GameStateManagement
             // Draw scrolling background
             myBackground.Draw(spriteBatch);
             myBackground2.Draw(spriteBatch);
+            if (this.winScreenLoaded)
+            {
+                winBackground.Draw(spriteBatch);
+            }
 
             // Draw obstacles
             LinkedListNode<Obstacle> obstacleListNode = obstacleList.First;
