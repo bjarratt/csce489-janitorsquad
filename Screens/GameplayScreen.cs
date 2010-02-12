@@ -48,7 +48,7 @@ namespace DinoEscape
 
         //Crystal Collection
         int crystals_collected = 0;
-        int crystals_needed = 3;
+        int crystals_needed = 4;
         bool winScreenLoaded = false;
 
         //time interval for crystal generation
@@ -111,12 +111,12 @@ namespace DinoEscape
         const int UNIT_OBJECT_WIDTH = 50;
         const int UNIT_OBJECT_HEIGHT = 50;
 
-        private const double OBSTACLE_PLACEMENT_ODDS = 0.01;
+        private const double OBSTACLE_PLACEMENT_ODDS = 0.012;    //0.01
         private const double OBSTACLE_ROCK_ODDS = 0.80;
         //private const double OBSTACLE_POND_ODDS = 0.25;
         private const double OBSTACLE_LOG_ODDS = 0.20;
 
-        private const double ENEMY_PLACEMENT_ODDS = 0.005;
+        private const double ENEMY_PLACEMENT_ODDS = 0.008;   //0.005
         private const double ENEMY_DINO1_ODDS = 1.0;
         private const double ENEMY_DINO2_ODDS = 0.0;
 
