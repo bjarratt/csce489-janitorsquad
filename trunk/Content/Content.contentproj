@@ -141,11 +141,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="gameAudio.xap">
-      <Name>gameAudio</Name>
-      <Importer>XactImporter</Importer>
-      <Processor>XactProcessor</Processor>
-    </Compile>
     <Compile Include="logshard.png">
       <Name>logshard</Name>
       <Importer>TextureImporter</Importer>
@@ -202,6 +197,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="gameAudio.xap">
+      <Name>gameAudio</Name>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+    </Compile>
     <Compile Include="invasion.spritefont">
       <Name>invasion</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -209,6 +209,20 @@
     </Compile>
     <Compile Include="invasionmenu.spritefont">
       <Name>invasionmenu</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="pericles.spritefont">
+      <Name>pericles</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="periclesmenu.spritefont">
+      <Name>periclesmenu</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>

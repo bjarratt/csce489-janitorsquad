@@ -117,8 +117,8 @@ namespace GameStateManagement
             ContentManager content = Game.Content;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("invasion");
-            font2 = content.Load<SpriteFont>("invasionmenu");
+            font = content.Load<SpriteFont>("pericles");
+            font2 = content.Load<SpriteFont>("periclesmenu");
             blankTexture = content.Load<Texture2D>("blank");
 
             // Tell each of the screens to load their content.
