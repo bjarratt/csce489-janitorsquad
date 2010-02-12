@@ -65,7 +65,7 @@ namespace GameStateManagement
 
         protected override void InitializeParticle(Particle p, Vector2 where)
         {
-            soundBank.PlayCue("rock_smash");
+            soundBank.PlayCue("explosion");
             base.InitializeParticle(p, where);
             
             p.Acceleration = -p.Velocity / p.Lifetime;

@@ -5,6 +5,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GameStateManagement
 {
@@ -15,6 +16,11 @@ namespace GameStateManagement
         {
             base.scroll_speed = 300;
         }
+
+        //sound stuff
+        AudioEngine audioEngine;
+        WaveBank waveBank;
+        SoundBank soundBank;
 
         /// <summary>
         /// Set up the constants 
@@ -44,6 +50,11 @@ namespace GameStateManagement
             // alpha blending is very good at creating smoke effects.
             spriteBlendMode = SpriteBlendMode.AlphaBlend;
 
+            //load audio
+            audioEngine = new AudioEngine("Content/gameAudio.xgs");
+            waveBank = new WaveBank(audioEngine, "Content/Wave Bank.xwb");
+            soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+
             DrawOrder = AlphaBlendDrawOrder;
         }
 
@@ -54,6 +65,7 @@ namespace GameStateManagement
         /// <param name="where">where the particle should be placed</param>
         protected override void InitializeParticle(Particle p, Vector2 where)
         {
+            soundBank.PlayCue("log_break");
             base.InitializeParticle(p, where);
 
             // the base is mostly good, but we want to simulate a little bit of wind

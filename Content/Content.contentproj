@@ -73,11 +73,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="gameAudio.xap">
-      <Name>gameAudio</Name>
-      <Importer>XactImporter</Importer>
-      <Processor>XactProcessor</Processor>
-    </Compile>
     <Compile Include="grass.png">
       <Name>grass</Name>
       <Importer>TextureImporter</Importer>
@@ -166,6 +161,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="gameAudio.xap">
+      <Name>gameAudio</Name>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+    </Compile>
     <Compile Include="logshard.png">
       <Name>logshard</Name>
       <Importer>TextureImporter</Importer>
