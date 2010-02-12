@@ -11,7 +11,7 @@ namespace _2DGame489
     class Sprite
     {
         const int MAX_WINX = 800;
-        const int MAX_WINY = 600;
+        const int MAX_WINY = 750;
         //radians of rotation
         public float rotation;
         //origin of rotation
