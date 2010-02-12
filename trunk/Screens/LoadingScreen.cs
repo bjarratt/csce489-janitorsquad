@@ -140,7 +140,8 @@ namespace DinoEscape
                 SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
                 SpriteFont font = ScreenManager.Font;
 
-                const string message = "Loading...";
+                const string message = "Loading... \nCollect the Crystals!";
+                const string message2 = "Collect the Crystals";
 
                 // Center the text in the viewport.
                 Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
