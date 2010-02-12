@@ -328,6 +328,20 @@ namespace GameStateManagement
                 }
                 obNode.Value.Position.X = RandomBetween(0.0f, 800.0f);
                 obNode.Value.Position.Y = yVal;
+
+                LinkedListNode<Obstacle> currNode = obstacleList.First;
+                LinkedListNode<Obstacle> nextNode = null;
+                while (currNode != null)
+                {
+                    nextNode = currNode.Next;
+                    if (currNode.Value.Position.Y == obNode.Value.Position.Y)
+                    {
+                        obstacleList.Remove(currNode);
+                        recycledObstacles.AddLast(currNode);
+                    }
+                    currNode = nextNode;
+                }
+
                 obNode.Value.LoadContent(content);
                 obstacleList.AddLast(obNode);
             }
@@ -621,8 +635,6 @@ namespace GameStateManagement
                     obstacleListNode = obstacleListNode.Next;
                 }
 
-                //Create crystal if it's time
-                generateCrystals(this.previousY - UNIT_OBJECT_HEIGHT, gameTime);
 
                 // Create a new row of obstacles and enemies, if needed
                 if ((this.previousY + distanceTravelled.Y) >= UNIT_OBJECT_HEIGHT)
@@ -635,6 +647,9 @@ namespace GameStateManagement
                 {
                     this.previousY += distanceTravelled.Y;
                 }
+
+                //Create crystal if it's time
+                generateCrystals(this.previousY - UNIT_OBJECT_HEIGHT, gameTime);
 
                 // Update enemies
                 LinkedListNode<Enemy> enemyListNode = enemyList.First;
