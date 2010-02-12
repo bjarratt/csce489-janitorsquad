@@ -238,7 +238,7 @@ namespace GameStateManagement
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            gameFont = content.Load<SpriteFont>("gamefont");
+            gameFont = content.Load<SpriteFont>("invasion");
 
             // Create a new SpriteBatch, which can be used to draw textures.
             //spriteBatch = new SpriteBatch(ScreenManager.Game.GraphicsDevice);

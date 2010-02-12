@@ -52,7 +52,7 @@ namespace GameStateManagement
         /// Constructor.
         /// </summary>
         public OptionsMenuScreen()
-            : base("Options")
+            : base("Instructions")
         {
             // Create our menu entries.
             ungulateMenuEntry = new MenuEntry(string.Empty);
@@ -85,10 +85,10 @@ namespace GameStateManagement
         /// </summary>
         void SetMenuEntryText()
         {
-            ungulateMenuEntry.Text = "Preferred ungulate: " + currentUngulate;
-            languageMenuEntry.Text = "Language: " + languages[currentLanguage];
-            frobnicateMenuEntry.Text = "Frobnicate: " + (frobnicate ? "on" : "off");
-            elfMenuEntry.Text = "elf: " + elf;
+            ungulateMenuEntry.Text = "Move jeep: arrow keys/WASD keys";
+            languageMenuEntry.Text = "Move turret: mouse pointer";
+            frobnicateMenuEntry.Text = "Fire turret: mouse click";
+            elfMenuEntry.Text = "Pause: ESC key";
         }
 
 

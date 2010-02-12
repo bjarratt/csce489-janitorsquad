@@ -131,7 +131,7 @@ namespace GameStateManagement
         public override void Draw(GameTime gameTime)
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            SpriteFont font = ScreenManager.Font;
+            SpriteFont font = ScreenManager.Font2;
 
             // Darken down any other screens that were drawn beneath the popup.
             ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
@@ -143,7 +143,7 @@ namespace GameStateManagement
             Vector2 textPosition = (viewportSize - textSize) / 2;
 
             // The background includes a border somewhat larger than the text itself.
-            const int hPad = 32;
+            const int hPad = 45;
             const int vPad = 16;
 
             Rectangle backgroundRectangle = new Rectangle((int)textPosition.X - hPad,
