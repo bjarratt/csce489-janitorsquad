@@ -37,6 +37,14 @@ namespace GameStateManagement
 
         GraphicsDeviceManager graphics;
 
+        //Scoring stuff
+        int Score = 0;
+        string score_string = "0";
+        string crystal_col;
+        string crystal_need;
+        Vector2 score_pos = new Vector2(10, 20);
+        Vector2 crystal_pos = new Vector2(10, 70);
+
         //Crystal Collection
         int crystals_collected = 0;
         int crystals_needed = 1;
@@ -70,6 +78,8 @@ namespace GameStateManagement
         Enemy enemyLoader;
 
         HealthBar HBar;
+        SpriteFont score_font;
+        SpriteFont crystal_font;
 
         //enemy object and position info
         private EnemyStats RAPTOR_STATS;
@@ -204,6 +214,9 @@ namespace GameStateManagement
             myBackground = new Sprite();
             myBackground2 = new Sprite();
             winBackground = new Sprite();
+
+            score_font = this.ScreenManager.Font2;
+            crystal_font = this.ScreenManager.Font2;
 
             Player1 = new Jeep();
             //give the Jeep a reference to the muzzleflash component
@@ -446,6 +459,11 @@ namespace GameStateManagement
 
 
                     //make big explosion
+                    if (currentOb.type != ObType.Crystal)
+                    {
+                        Score -= 489;    //not so arbitrary number
+                        if (Score < 0) Score = 0;
+                    }
                     Vector2 where;
                     where.X = currentOb.Position.X + currentOb.Source.Width / 2;
                     where.Y = currentOb.Position.Y + currentOb.Source.Height / 2;
@@ -464,6 +482,7 @@ namespace GameStateManagement
                     }
                     else if (currentOb.type == ObType.Crystal)
                     {
+                        Score += 9001;  
                         //crystal particles
                         crystals_collected++;
                         soundBank.PlayCue("collect");
@@ -519,6 +538,8 @@ namespace GameStateManagement
                         GameOver.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
                     }
 
+                    Score -= 489;
+                    if (Score < 0) Score = 0;
                     //add blood splash
                     Vector2 where = Vector2.Zero;
                     where.X = enemyListNode.Value.Position.X + enemyListNode.Value.Size.Height;
@@ -546,6 +567,8 @@ namespace GameStateManagement
                     {
                         if (enemyListNode.Value.collidesWith(Player1.bullets[i].Position.X, Player1.bullets[i].Position.Y, BULLET_COLLISION_RADIUS))
                         {
+                            Score += 1000;
+
                             //add blood splash
                             Vector2 where = enemyListNode.Value.getCenter();
                             blood.AddParticles(where);
@@ -577,6 +600,7 @@ namespace GameStateManagement
             {
                 Vector2 distanceTravelled = SCROLL_SPEED * SCROLL_DIR * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+
                 //// Allows the game to exit
                 //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 //    this.Exit();
@@ -585,7 +609,6 @@ namespace GameStateManagement
 
                 //Update Health Bar
                 HBar.Update(gameTime);
-
 
                 // Perform garbage collection on obstacles
                 garbageCollectObstacles();
@@ -673,6 +696,11 @@ namespace GameStateManagement
                 processObstacleCollisions(gameTime);
                 processEnemyCollisions();
                 processBulletHits();
+
+                //Update Score and Crystal count
+                score_string = Score.ToString();
+                crystal_col = crystals_collected.ToString();
+                crystal_need = crystals_needed.ToString();
 
                 turretReticle.Update(gameTime);
             }
@@ -783,6 +811,9 @@ namespace GameStateManagement
             turretReticle.Draw(spriteBatch);
 
             HBar.Draw(spriteBatch);
+
+            spriteBatch.DrawString(score_font, "Score: " + score_string, score_pos, Color.White);
+            spriteBatch.DrawString(crystal_font, "Crystals: " + crystal_col + " / " + crystal_need, crystal_pos, Color.Yellow);
 
             spriteBatch.End();
 
