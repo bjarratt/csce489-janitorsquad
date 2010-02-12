@@ -36,7 +36,6 @@ namespace GameStateManagement
         //Muzzle Flash particle effect reference from main GameplayScreen class
         public MuzzleFlashPS muzz;
         public DirtCloudPS dirt_cloud;
-        public GrassPS grass;
 
         const int TURRET_POS_X = 34;
         const int TURRET_POS_Y = 110;
@@ -321,9 +320,7 @@ namespace GameStateManagement
                 Vector2 where = Vector2.Zero;
                 where.X = this.Position.X + this.Size.Width * 0.5f;
                 where.Y = this.Position.Y + this.Size.Height;
-                if (where.X >= 340 && where.X <= 430)
-                    dirt_cloud.AddParticles(where);
-                else grass.AddParticles(where);
+                dirt_cloud.AddParticles(where);
                 time_between_puffs = PUFF_TIME;
             }
         }
