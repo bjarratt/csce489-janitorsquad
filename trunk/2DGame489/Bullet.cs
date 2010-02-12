@@ -55,13 +55,13 @@ namespace _2DGame489
         {
             if (visible == true)
             {
-                soundBank.PlayCue("gunfire");
                 base.Draw(theSpriteBatch);  //call Sprite.Draw only if the bullet is visible
             }
         }
 
         public void Fire(GamePadState currentGPState, MouseState currentMouseState, Vector2 theStartPos, Vector2 theSpeed, Vector2 theDirection)
         {
+            soundBank.PlayCue("gunfire");
             Position = theStartPos;     //init bullet position to start position
             start_position = theStartPos;   //init start position
             speed = theSpeed;   //init bullet speed

@@ -25,6 +25,7 @@ namespace _2DGame489
         AudioEngine audioEngine;
         WaveBank waveBank;
         SoundBank soundBank;
+
         public SpriteBatch SpriteBatch
         {
             get { return spriteBatch; }
