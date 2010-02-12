@@ -466,6 +466,7 @@ namespace GameStateManagement
                     {
                         //crystal particles
                         crystals_collected++;
+                        soundBank.PlayCue("collect");
                     }
                     else
                     {
@@ -483,6 +484,9 @@ namespace GameStateManagement
                         explosion.AddParticles(whereat);
                         //ScreenManager.RemoveScreen(this);
                         this.ScreenState = ScreenState.Hidden;
+                        soundBank.Dispose();
+                        soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+                        soundBank.PlayCue("gameover");
                         GameOver.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
                     }
                 }
@@ -499,7 +503,6 @@ namespace GameStateManagement
             {
                 if (enemyListNode.Value.state == EnemyAiState.Caught)
                 {
-                    //soundBank.PlayCue("hit");
                     Player1.Jeep_health -= 10;
                     Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
                     if (Player1.Jeep_health == 0)
@@ -510,6 +513,9 @@ namespace GameStateManagement
                         explosion.AddParticles(whereat);
                         //ScreenManager.RemoveScreen(this);
                         this.ScreenState = ScreenState.Hidden;
+                        soundBank.Dispose();
+                        soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+                        soundBank.PlayCue("gameover");
                         GameOver.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
                     }
 
