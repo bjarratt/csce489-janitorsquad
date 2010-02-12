@@ -29,25 +29,29 @@ namespace DinoEscape
         {
             textureFilename = "rockpiece";
 
+            //rock explosion... high variance
             minInitialSpeed = 100;
             maxInitialSpeed = 500;
 
             minAcceleration = 0;
             maxAcceleration = 0;
 
+            //short lived
             minLifetime = 0.25f;
             maxLifetime = 0.4f;
 
+            //a bit of variance in size
             minScale = 0.5f;
             maxScale = 1.2f;
 
+            //lots of particles
             minNumParticles = 15;
             maxNumParticles = 20;
 
+            //more rotation
             minRotationSpeed = -MathHelper.PiOver2;
             maxRotationSpeed = MathHelper.PiOver2;
 
-            // alpha blending is very good at creating smoke effects.
             spriteBlendMode = SpriteBlendMode.AlphaBlend;
 
             //load audio
@@ -68,8 +72,6 @@ namespace DinoEscape
             soundBank.PlayCue("rock_smash");
             base.InitializeParticle(p, where);
 
-            // the base is mostly good, but we want to simulate a little bit of wind
-            // heading down.
             p.Acceleration.Y += GameplayScreen.RandomBetween(10, 50);
         }
     }

@@ -29,26 +29,30 @@ namespace DinoEscape
         {
             textureFilename = "blood";
 
-            // pretty slow
+            //constants define how the effect behaves...
+            //blood explosion should have big range between low and high speed
             minInitialSpeed = 100;
             maxInitialSpeed = 500;
 
+            //no acceleration
             minAcceleration = 0;
             maxAcceleration = 0;
 
+            //short lifetime since the effect is quick
             minLifetime = 0.25f;
             maxLifetime = 0.5f;
 
             minScale = 1.0f;
             maxScale = 1.5f;
 
+            //lots of blood :P
             minNumParticles = 25;
             maxNumParticles = 30;
 
+            //no rotation since the sprite is a circle
             minRotationSpeed = 0;
             maxRotationSpeed = 0;
 
-            // alpha blending is very good at creating smoke effects.
             spriteBlendMode = SpriteBlendMode.AlphaBlend;
 
             //load audio

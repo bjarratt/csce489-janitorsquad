@@ -1,4 +1,8 @@
-﻿#region Using Statements
+﻿#region File Description
+// Own Class Adapted from Microsofts examples
+#endregion
+
+#region Using Statements
 using System;
 using System.Collections.Generic;
 using System.Linq;

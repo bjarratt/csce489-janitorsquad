@@ -13,6 +13,7 @@ namespace DinoEscape
     {
         const string HEALTHBAR_ASSET_NAME = "HealthBar";
         Game game;
+        //give the bar a reference to the player so it knows the new health at each update
         Jeep Player1;
         private float health;
 

@@ -1,4 +1,8 @@
-﻿#region Using Statements
+﻿#region File Description
+// Own Class Adapted from Microsofts examples
+#endregion
+
+#region Using Statements
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +17,30 @@ namespace DinoEscape
 {
     class GameOver : GameScreen
     {
+        // Texture for the picture
         Texture2D gameOverScreen;
-        bool loadingIsSlow;
+
+        // Are the other screens gone
         bool otherScreensAreGone;
+
+        // List of screens to load
         GameScreen[] screensToLoad;
+
+        // Number of frames to wait... used to keep the gameover screen up for a longer time
         private int waitingFrames;
 
-        private GameOver(ScreenManager screenManager, bool loadingIsSlow,
+        // Private constructor so it only gets called when the Game Over condition occurs
+        // and the Load static method is subsequently called...
+        private GameOver(ScreenManager screenManager,
                               GameScreen[] screensToLoad)
         {
             this.screensToLoad = screensToLoad;
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
-            TransitionOffTime = TimeSpan.FromSeconds(10.0);
+            TransitionOffTime = TimeSpan.FromSeconds(2.0);
             this.waitingFrames = 60 * 5;
         }
 
-        public static void Load(ScreenManager screenManager, bool loadingIsSlow,
+        public static void Load(ScreenManager screenManager,
                                 PlayerIndex? controllingPlayer,
                                 params GameScreen[] screensToLoad)
         {
@@ -37,9 +49,7 @@ namespace DinoEscape
                 screen.ExitScreen();
 
             // Create and activate the loading screen.
-            GameOver gameoverscreen = new GameOver(screenManager,
-                                                            loadingIsSlow,
-                                                            screensToLoad);
+            GameOver gameoverscreen = new GameOver(screenManager, screensToLoad);
 
             screenManager.AddScreen(gameoverscreen, controllingPlayer);
         }

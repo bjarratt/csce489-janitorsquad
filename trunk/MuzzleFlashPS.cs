@@ -23,23 +23,27 @@ namespace DinoEscape
         {
             textureFilename = "explosion";
 
+            //stationary effect
             minInitialSpeed = 0;
             maxInitialSpeed = 0;
 
             minAcceleration = 0;
             maxAcceleration = 0;
 
+            //extremely short lived... it's a flash
             minLifetime = 0.05f;
             maxLifetime = 0.1f;
 
+            //extremely small version of the picture used to make fire effects
             minScale = .08f;
             maxScale = .1f;
 
+            //very few particles since they are all on top of each other
             minNumParticles = 3;
             maxNumParticles = 4;
 
-            minRotationSpeed = 0;//-MathHelper.PiOver4;
-            maxRotationSpeed = 0;// MathHelper.PiOver4;
+            minRotationSpeed = 0;
+            maxRotationSpeed = 0;
 
             spriteBlendMode = SpriteBlendMode.Additive;
 

@@ -2,6 +2,7 @@
 //-----------------------------------------------------------------------------
 // GameScreen.cs
 //
+// Adapted From :
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------

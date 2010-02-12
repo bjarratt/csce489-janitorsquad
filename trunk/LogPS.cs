@@ -29,25 +29,29 @@ namespace DinoEscape
         {
             textureFilename = "logshard";
 
+            //explosion of splinters, so lots of variance
             minInitialSpeed = 100;
             maxInitialSpeed = 500;
 
+            //no acceleration
             minAcceleration = 0;
             maxAcceleration = 0;
 
+            //short lived
             minLifetime = 0.3f;
             maxLifetime = 0.5f;
 
             minScale = 0.6f;
             maxScale = 1.0f;
 
+            //lots of shards
             minNumParticles = 20;
             maxNumParticles = 25;
 
+            //Lots of rotation
             minRotationSpeed = -MathHelper.Pi * 4;
             maxRotationSpeed = MathHelper.Pi * 4;
 
-            // alpha blending is very good at creating smoke effects.
             spriteBlendMode = SpriteBlendMode.AlphaBlend;
 
             //load audio
