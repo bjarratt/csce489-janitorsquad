@@ -197,13 +197,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="gameAudio.xap">
-      <Name>gameAudio</Name>
-      <Importer>XactImporter</Importer>
-      <Processor>XactProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="pericles.spritefont">
       <Name>pericles</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -211,6 +204,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="gameAudio.xap">
+      <Name>gameAudio</Name>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+    </Compile>
     <Compile Include="periclesmenu.spritefont">
       <Name>periclesmenu</Name>
       <Importer>FontDescriptionImporter</Importer>
