@@ -27,6 +27,7 @@ namespace GameStateManagement
         string message;
         Texture2D gradientTexture;
 
+
         #endregion
 
         #region Events
@@ -79,7 +80,7 @@ namespace GameStateManagement
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            gradientTexture = content.Load<Texture2D>("gradient");
+            gradientTexture = content.Load<Texture2D>("pause_screen");
         }
 
 
@@ -156,7 +157,7 @@ namespace GameStateManagement
             spriteBatch.Begin();
 
             // Draw the background rectangle.
-            spriteBatch.Draw(gradientTexture, backgroundRectangle, color);
+            spriteBatch.Draw(gradientTexture, new Vector2((int)textPosition.X - hPad, (int)textPosition.Y - vPad),color);
 
             // Draw the message box text.
             spriteBatch.DrawString(font, message, textPosition, color);
