@@ -10,9 +10,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameStateManagement
 {
+    enum ObType
+    {
+        Rock,
+        Log,
+        Crystal
+    }
     class Obstacle : Sprite
     {
-        public int type;
+        //public int type;
+        public ObType type;
 
         public Obstacle( string assetName )
         {
