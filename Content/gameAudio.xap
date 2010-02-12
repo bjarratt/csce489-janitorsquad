@@ -225,6 +225,12 @@ Wave Bank
     Windows Bank Path Edited = 0;
     Seek Tables = 1;
     Compression Preset Name = <none>;
+    Xbox Bank Last Modified Low = 0;
+    Xbox Bank Last Modified High = 0;
+    PC Bank Last Modified Low = 0;
+    PC Bank Last Modified High = 0;
+    Header Last Modified Low = 0;
+    Header Last Modified High = 0;
     Bank Last Revised Low = 2665539150;
     Bank Last Revised High = 30059475;
 
@@ -466,6 +472,8 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
+    Header Last Modified High = 0;
+    Header Last Modified Low = 0;
 
     Sound
     {
@@ -608,7 +616,7 @@ Sound Bank
     Sound
     {
         Name = gunfire;
-        Volume = -2700;
+        Volume = -2400;
         Pitch = 0;
         Priority = 0;
 
@@ -654,7 +662,7 @@ Sound Bank
     Sound
     {
         Name = Dino Escape Main Loop;
-        Volume = -1200;
+        Volume = -1800;
         Pitch = 0;
         Priority = 0;
 
@@ -886,7 +894,7 @@ Sound Bank
     Sound
     {
         Name = dino_death;
-        Volume = -2000;
+        Volume = -2500;
         Pitch = 0;
         Priority = 0;
 
