@@ -1,0 +1,157 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>3b1153c5-e30c-42b2-829e-90b58d3a6efe</ProjectGuid>
+    <ProjectTypeGuids>{96E2B04D-8817-42c6-938A-82C39BA4D311};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
+    <PlatformTarget>x86</PlatformTarget>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="background.png">
+      <Name>background</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="blank.png">
+      <Name>blank</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="gradient.png">
+      <Name>gradient</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="gamefont.spritefont">
+      <Name>gamefont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <Compile Include="menufont.spritefont">
+      <Name>menufont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.EffectImporter, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.FBXImporter, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.TextureImporter, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="bullet.png">
+      <Name>bullet</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="dirtsmoke.png">
+      <Name>dirtsmoke</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="explosion.png">
+      <Name>explosion</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="grass.png">
+      <Name>grass</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="HealthBar.png">
+      <Name>HealthBar</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="jeep-hurricane-9.png">
+      <Name>jeep-hurricane-9</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="left_tire.png">
+      <Name>left_tire</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Long_Background.png">
+      <Name>Long_Background</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="obstacle_log.png">
+      <Name>obstacle_log</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="obstacle_pond.png">
+      <Name>obstacle_pond</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="obstacle_small.png">
+      <Name>obstacle_small</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="raptor.png">
+      <Name>raptor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="reticle.png">
+      <Name>reticle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="right_tire.png">
+      <Name>right_tire</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="smoke.bmp">
+      <Name>smoke</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="turret1.png">
+      <Name>turret1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="gameAudio.xap">
+      <Name>gameAudio</Name>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v3.0\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
