@@ -12,6 +12,8 @@ namespace GameStateManagement
 {
     class Obstacle : Sprite
     {
+        public int type;
+
         public Obstacle( string assetName )
         {
             this.AssetName = assetName;

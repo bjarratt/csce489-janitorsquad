@@ -70,7 +70,10 @@ namespace GameStateManagement
         ExplosionSmokePS explosion_smoke;
         MuzzleFlashPS muzzleflash;
         DirtCloudPS dirt;
-        GrassPS grass;
+        BloodPS blood;
+        RockPS rock_smoke;
+        RockPiecePS rock_piece;
+        LogPS log_shard;
 
         // Used for collision detection
         private Rectangle boundingBox1;
@@ -152,8 +155,17 @@ namespace GameStateManagement
             dirt = new DirtCloudPS(ScreenManager.Game, 1, ScreenManager.SpriteBatch);
             ScreenManager.Game.Components.Add(dirt);
 
-            grass = new GrassPS(ScreenManager.Game, 1, ScreenManager.SpriteBatch);
-            ScreenManager.Game.Components.Add(grass);
+            blood = new BloodPS(ScreenManager.Game, 1, ScreenManager.SpriteBatch);
+            ScreenManager.Game.Components.Add(blood);
+
+            rock_smoke = new RockPS(ScreenManager.Game, 1, ScreenManager.SpriteBatch);
+            ScreenManager.Game.Components.Add(rock_smoke);
+
+            rock_piece = new RockPiecePS(ScreenManager.Game, 1, ScreenManager.SpriteBatch);
+            ScreenManager.Game.Components.Add(rock_piece);
+
+            log_shard = new LogPS(ScreenManager.Game, 1, ScreenManager.SpriteBatch);
+            ScreenManager.Game.Components.Add(log_shard);
 
             // Initialize struct for setting enemy raptor stats
             this.RAPTOR_STATS.maxSpeed = 3.0f;
@@ -183,7 +195,6 @@ namespace GameStateManagement
             //give the Jeep a reference to the muzzleflash component
             Player1.muzz = muzzleflash;
             Player1.dirt_cloud = dirt;
-            Player1.grass = grass;
             //Player1.Scale = 0.5f;
 
             HBar = new HealthBar(this.ScreenManager.Game, Player1);
@@ -281,11 +292,14 @@ namespace GameStateManagement
                         obNode = recycledObstacles.First;
                         recycledObstacles.RemoveFirst();
                         obNode.Value.AssetName = "obstacle_small";
+                        obNode.Value.type = 1;
                     }
 
                     if (randomNum < OBSTACLE_LOG_ODDS * OBSTACLE_PLACEMENT_ODDS)
                     {
                         obNode.Value.AssetName = "obstacle_log";
+                        obNode.Value.type = 2;
+                        i++;
                         i += 2; // A log is triple-wide, so it takes an additional 2 places
                     }
 
@@ -388,8 +402,20 @@ namespace GameStateManagement
                     Vector2 where;
                     where.X = currentOb.Position.X + currentOb.Source.Width / 2;
                     where.Y = currentOb.Position.Y + currentOb.Source.Height / 2;
-                    explosion.AddParticles(where);
-                    explosion_smoke.AddParticles(where);
+                    if (currentOb.type == 1)
+                    {
+                        rock_piece.AddParticles(where);
+                        rock_smoke.AddParticles(where);
+                    }
+                    else if (currentOb.type == 2)
+                    {
+                        log_shard.AddParticles(where);
+                    }
+                    else
+                    {
+                        rock_piece.AddParticles(where);
+                        rock_smoke.AddParticles(where);
+                    }
                 }
                 obstacleMatrixNode = nextNode;
             }
@@ -407,6 +433,12 @@ namespace GameStateManagement
                     //soundBank.PlayCue("hit");
                     Player1.Jeep_health -= 10;
                     Player1.Jeep_health = (int)MathHelper.Clamp(Player1.Jeep_health, 0.0f, 100.0f);
+
+                    //add blood splash
+                    Vector2 where = Vector2.Zero;
+                    where.X = enemyListNode.Value.Position.X + enemyListNode.Value.Size.Height;
+                    where.Y = enemyListNode.Value.Position.Y - enemyListNode.Value.Size.Width;
+                    blood.AddParticles(where);
 
                     enemyList.Remove(enemyListNode);
                     recycledEnemies.AddLast(enemyListNode);
@@ -431,6 +463,12 @@ namespace GameStateManagement
                         {
                             enemyList.Remove(enemyListNode);
                             recycledEnemies.AddLast(enemyListNode);
+
+                            //add blood splash
+                            Vector2 where = Vector2.Zero;
+                            where.X = enemyListNode.Value.Position.X + enemyListNode.Value.Size.Height;
+                            where.Y = enemyListNode.Value.Position.Y - enemyListNode.Value.Size.Width;
+                            blood.AddParticles(where);
 
                             Player1.bullets[i].visible = false; // Bullet destroyed by hitting enemy
 

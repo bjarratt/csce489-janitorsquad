@@ -72,11 +72,14 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Blood.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="DirtCloudPS.cs" />
     <Compile Include="Enemy.cs" />
@@ -86,12 +89,15 @@
     <Compile Include="GrassPS.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="Jeep.cs" />
+    <Compile Include="LogPS.cs" />
     <Compile Include="MuzzleFlashPS.cs" />
     <Compile Include="Obstacle.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reticle.cs" />
+    <Compile Include="RockPiecePS.cs" />
+    <Compile Include="RockPS.cs" />
     <Compile Include="ScreenManager\GameScreen.cs" />
     <Compile Include="ScreenManager\InputState.cs" />
     <Compile Include="ScreenManager\ScreenManager.cs" />
