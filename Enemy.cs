@@ -180,10 +180,8 @@ namespace GameStateManagement
             this.boundingCirclesUpdated = false;
         }
 
-        public bool collidesWith(float x, float y, int radius)
+        private void updateBoundingCircles()
         {
-            // If necessary, the rotated location of the head and tail collision circles are calculated.
-            // This allows the location of the middle circles to be extrapolated from their radii.
             if (!this.boundingCirclesUpdated)
             {
                 double cosAngle = Math.Cos(this.rotation);
@@ -202,6 +200,19 @@ namespace GameStateManagement
 
                 this.boundingCirclesUpdated = true;
             }
+        }
+
+        public Vector2 getCenter()
+        {
+            this.updateBoundingCircles();
+            return this.lastCollisionCircleCenter - this.firstCollisionCircleCenter;
+        }
+
+        public bool collidesWith(float x, float y, int radius)
+        {
+            // If necessary, the rotated location of the head and tail collision circles are calculated.
+            // This allows the location of the middle circles to be extrapolated from their radii.
+            updateBoundingCircles();
 
             Vector2 currentPosition = this.firstCollisionCircleCenter;
             double distanceSquared;
