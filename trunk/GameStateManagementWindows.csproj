@@ -86,7 +86,6 @@
     <Compile Include="ExplosionPS.cs" />
     <Compile Include="ExplosionSmokePS.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="GrassPS.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="Jeep.cs" />
     <Compile Include="LogPS.cs" />

@@ -100,7 +100,7 @@ namespace GameStateManagement
         private const double ENEMY_DINO1_ODDS = 1.0;
         private const double ENEMY_DINO2_ODDS = 0.0;
 
-        private const int ENEMY_SPAWN_Y = 900;
+        private const int ENEMY_SPAWN_Y = MAX_WINY + 300;
 
         private const int BULLET_COLLISION_RADIUS = 5;
 
@@ -238,7 +238,7 @@ namespace GameStateManagement
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            gameFont = content.Load<SpriteFont>("invasion");
+            gameFont = content.Load<SpriteFont>("pericles");
 
             // Create a new SpriteBatch, which can be used to draw textures.
             //spriteBatch = new SpriteBatch(ScreenManager.Game.GraphicsDevice);
