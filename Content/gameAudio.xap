@@ -225,8 +225,14 @@ Wave Bank
     Windows Bank Path Edited = 0;
     Seek Tables = 1;
     Compression Preset Name = <none>;
-    Bank Last Revised Low = 3785938397;
-    Bank Last Revised High = 30059492;
+    Xbox Bank Last Modified Low = 0;
+    Xbox Bank Last Modified High = 0;
+    PC Bank Last Modified Low = 0;
+    PC Bank Last Modified High = 0;
+    Header Last Modified Low = 0;
+    Header Last Modified High = 0;
+    Bank Last Revised Low = 2400587810;
+    Bank Last Revised High = 30059509;
 
     Wave
     {
@@ -480,6 +486,29 @@ Wave Bank
             Last Modified High = 30059453;
         }
     }
+
+    Wave
+    {
+        Name = gameover;
+        File = audio\gameover.wav;
+        Build Settings Last Modified Low = 2382150664;
+        Build Settings Last Modified High = 30059509;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 1;
+            Sampling Rate = 11025;
+            Bits Per Sample = 0;
+            Play Region Offset = 44;
+            Play Region Length = 43905;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 1380699606;
+            Last Modified High = 30059509;
+        }
+    }
 }
 
 Sound Bank
@@ -489,6 +518,8 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
+    Header Last Modified High = 0;
+    Header Last Modified Low = 0;
 
     Sound
     {
@@ -539,7 +570,7 @@ Sound Bank
     Sound
     {
         Name = log_break;
-        Volume = -3200;
+        Volume = -3500;
         Pitch = 0;
         Priority = 0;
 
@@ -631,7 +662,7 @@ Sound Bank
     Sound
     {
         Name = gunfire;
-        Volume = -2400;
+        Volume = -2200;
         Pitch = 0;
         Priority = 0;
 
@@ -817,7 +848,7 @@ Sound Bank
     Sound
     {
         Name = collect;
-        Volume = -1200;
+        Volume = -1000;
         Pitch = 0;
         Priority = 0;
 
@@ -863,7 +894,7 @@ Sound Bank
     Sound
     {
         Name = rock_smash;
-        Volume = -3500;
+        Volume = -4000;
         Pitch = 0;
         Priority = 0;
 
@@ -909,7 +940,7 @@ Sound Bank
     Sound
     {
         Name = dino_death;
-        Volume = -2500;
+        Volume = -3000;
         Pitch = 0;
         Priority = 0;
 
@@ -991,6 +1022,52 @@ Sound Bank
                     Bank Index = 0;
                     Entry Name = explosion;
                     Entry Index = 10;
+                    Weight = 255;
+                    Weight Min = 0;
+                }
+            }
+        }
+    }
+
+    Sound
+    {
+        Name = gameover;
+        Volume = -1200;
+        Pitch = 0;
+        Priority = 0;
+
+        Category Entry
+        {
+            Name = Default;
+        }
+
+        Track
+        {
+            Volume = 0;
+
+            Play Wave Event
+            {
+                Break Loop = 0;
+                Use Speaker Position = 0;
+                Use Center Speaker = 1;
+                New Speaker Position On Loop = 1;
+                Speaker Position Angle = 0.000000;
+                Speaer Position Arc = 0.000000;
+
+                Event Header
+                {
+                    Timestamp = 0;
+                    Relative = 0;
+                    Random Recurrence = 0;
+                    Random Offset = 0;
+                }
+
+                Wave Entry
+                {
+                    Bank Name = Wave Bank;
+                    Bank Index = 0;
+                    Entry Name = gameover;
+                    Entry Index = 11;
                     Weight = 255;
                     Weight Min = 0;
                 }
@@ -1213,6 +1290,26 @@ Sound Bank
         {
             Name = explosion;
             Index = 10;
+            Weight Min = 0;
+            Weight Max = 255;
+        }
+    }
+
+    Cue
+    {
+        Name = gameover;
+
+        Variation
+        {
+            Variation Type = 3;
+            Variation Table Type = 1;
+            New Variation on Loop = 0;
+        }
+
+        Sound Entry
+        {
+            Name = gameover;
+            Index = 11;
             Weight Min = 0;
             Weight Max = 255;
         }
