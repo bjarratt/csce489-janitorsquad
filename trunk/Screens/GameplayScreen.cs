@@ -43,6 +43,9 @@ namespace GameStateManagement
             get { return spriteBatch; }
         }*/
 
+        //time interval for crystal generation
+        float time = 0;
+
         //Sound stuff!
         AudioEngine audioEngine;
         WaveBank waveBank;
@@ -285,7 +288,34 @@ namespace GameStateManagement
 
         #region Update and Draw
 
-        protected void generateNewRow(float yVal)
+        protected void generateCrystals(float yVal, GameTime theGameTime)
+        {
+            float dt = (float)theGameTime.ElapsedGameTime.TotalSeconds;
+            time += dt;
+            if (time > 20)
+            {
+                LinkedListNode<Obstacle> obNode;
+                if (recycledObstacles.Count == 0)
+                {
+                    obNode = new LinkedListNode<Obstacle>(new Obstacle("crystal"));
+                    time = 0.0f;
+                }
+                else
+                {
+                    obNode = recycledObstacles.First;
+                    recycledObstacles.RemoveFirst();
+                    obNode.Value.AssetName = "crystal";
+                    obNode.Value.type = (ObType)3;
+                    time = 0.0f;
+                }
+                obNode.Value.Position.X = RandomBetween(0.0f, 800.0f);
+                obNode.Value.Position.Y = yVal;
+                obNode.Value.LoadContent(content);
+                obstacleList.AddLast(obNode);
+            }
+        }
+
+        protected void generateNewRow(float yVal, GameTime theGameTime)
         {
             //obstacleList.AddLast(new LinkedListNode<List<Obstacle>>(new List<Obstacle>()));
             double randomNum;
@@ -293,6 +323,7 @@ namespace GameStateManagement
             for (int i = 0; i < MAX_WINX / UNIT_OBJECT_WIDTH; i++)
             {
                 randomNum = randNumGenerator.NextDouble();
+
                 if (randomNum < OBSTACLE_PLACEMENT_ODDS)
                 {
                     LinkedListNode<Obstacle> obNode;
@@ -305,13 +336,13 @@ namespace GameStateManagement
                         obNode = recycledObstacles.First;
                         recycledObstacles.RemoveFirst();
                         obNode.Value.AssetName = "obstacle_small";
-                        obNode.Value.type = 1;
+                        obNode.Value.type = (ObType)1;
                     }
 
                     if (randomNum < OBSTACLE_LOG_ODDS * OBSTACLE_PLACEMENT_ODDS)
                     {
                         obNode.Value.AssetName = "obstacle_log";
-                        obNode.Value.type = 2;
+                        obNode.Value.type = (ObType)2;
                         i++;
                         i += 2; // A log is triple-wide, so it takes an additional 2 places
                     }
@@ -415,12 +446,12 @@ namespace GameStateManagement
                     Vector2 where;
                     where.X = currentOb.Position.X + currentOb.Source.Width / 2;
                     where.Y = currentOb.Position.Y + currentOb.Source.Height / 2;
-                    if (currentOb.type == 1)
+                    if (currentOb.type == (ObType)1)
                     {
                         rock_piece.AddParticles(where);
                         rock_smoke.AddParticles(where);
                     }
-                    else if (currentOb.type == 2)
+                    else if (currentOb.type == (ObType)2)
                     {
                         log_shard.AddParticles(where);
                     }
@@ -529,11 +560,14 @@ namespace GameStateManagement
                     obstacleListNode = obstacleListNode.Next;
                 }
 
+                //Create crystal if it's time
+                generateCrystals(this.previousY - UNIT_OBJECT_HEIGHT, gameTime);
+
                 // Create a new row of obstacles and enemies, if needed
                 if ((this.previousY + distanceTravelled.Y) >= UNIT_OBJECT_HEIGHT)
                 {
                     this.previousY = (this.previousY + distanceTravelled.Y) % UNIT_OBJECT_HEIGHT;
-                    generateNewRow(this.previousY - UNIT_OBJECT_HEIGHT);
+                    generateNewRow(this.previousY - UNIT_OBJECT_HEIGHT, gameTime);
                     generateNewEnemies(ENEMY_SPAWN_Y);
                 }
                 else
