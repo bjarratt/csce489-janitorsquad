@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 
-namespace GameStateManagement
+namespace DinoEscape
 {
     public abstract class ParticleSystem : DrawableGameComponent
     {

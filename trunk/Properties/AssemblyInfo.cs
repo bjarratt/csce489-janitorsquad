@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Game State Management")]
-[assembly: AssemblyProduct("Game State Management")]
-[assembly: AssemblyDescription("This sample shows how to manage the transitions between different menus and gameplay states.")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyTitle("Dino Escape!")]
+[assembly: AssemblyProduct("Dino Escape!")]
+[assembly: AssemblyDescription("Dinosaurs. Time Travel. Explosions.")]
+[assembly: AssemblyCompany("Janitor Squad")]
 
-[assembly: AssemblyCopyright("Copyright © Microsoft 2007")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
