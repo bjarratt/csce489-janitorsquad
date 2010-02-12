@@ -286,7 +286,7 @@ namespace GameStateManagement
                     if (randomNum < OBSTACLE_LOG_ODDS * OBSTACLE_PLACEMENT_ODDS)
                     {
                         obNode.Value.AssetName = "obstacle_log";
-                        i++;
+                        i += 2; // A log is triple-wide, so it takes an additional 2 places
                     }
 
                     obNode.Value.Position.X = i * UNIT_OBJECT_WIDTH;
