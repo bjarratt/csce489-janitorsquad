@@ -12,7 +12,8 @@
     <XnaPlatform>Windows</XnaPlatform>
     <XnaCrossPlatformGroupID>74a02f62-84db-423c-ab53-ca2461c89c83</XnaCrossPlatformGroupID>
     <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>GameStateSample.PNG</Thumbnail>
+    <Thumbnail>
+    </Thumbnail>
     <XnaUpgrade>1</XnaUpgrade>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileUpgradeFlags>
@@ -117,7 +118,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
-    <None Include="GameStateSample.PNG" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">
