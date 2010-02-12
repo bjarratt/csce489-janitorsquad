@@ -205,7 +205,8 @@ namespace GameStateManagement
         public Vector2 getCenter()
         {
             this.updateBoundingCircles();
-            return this.lastCollisionCircleCenter - this.firstCollisionCircleCenter;
+
+            return ((this.lastCollisionCircleCenter - this.firstCollisionCircleCenter) / 2) + this.firstCollisionCircleCenter;
         }
 
         public bool collidesWith(float x, float y, int radius)
