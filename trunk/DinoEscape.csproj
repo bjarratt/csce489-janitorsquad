@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GameStateManagement</RootNamespace>
-    <AssemblyName>GameStateManagement</AssemblyName>
+    <RootNamespace>DinoEscape</RootNamespace>
+    <AssemblyName>DinoEscape</AssemblyName>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaCrossPlatformGroupID>74a02f62-84db-423c-ab53-ca2461c89c83</XnaCrossPlatformGroupID>
