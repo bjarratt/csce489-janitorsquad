@@ -48,7 +48,7 @@ namespace DinoEscape
 
         //Crystal Collection
         int crystals_collected = 0;
-        int crystals_needed = 1;
+        int crystals_needed = 3;
         bool winScreenLoaded = false;
 
         //time interval for crystal generation
@@ -546,7 +546,9 @@ namespace DinoEscape
                         soundBank.Dispose();
                         //make new soundbank to play new sound
                         //soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+                        GameplayScreen.soundController.StopMusic("Dino Escape Main Loop");
                         //soundBank.PlayCue("gameover");
+                        GameplayScreen.soundController.Play("gameover");
                         //call function which loads the GameOver screen and then takes you
                         //back to the main menu...
                         GameOver.Load(ScreenManager, null, new BackgroundScreen(), new MainMenuScreen());
