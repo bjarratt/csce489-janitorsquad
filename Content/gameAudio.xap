@@ -940,7 +940,7 @@ Sound Bank
     Sound
     {
         Name = dino_death;
-        Volume = -3000;
+        Volume = -3200;
         Pitch = 0;
         Priority = 0;
 

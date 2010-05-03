@@ -113,6 +113,7 @@
     <Compile Include="Screens\OptionsMenuScreen.cs" />
     <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
+    <Compile Include="SoundControl.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="Turret.cs" />
   </ItemGroup>
