@@ -22,10 +22,12 @@ namespace DinoEscape
         Vector2 speed; 
         Vector2 direction;
 
+        /*
         //sound stuff
         AudioEngine audioEngine;
         WaveBank waveBank;
         SoundBank soundBank;
+        */
 
         public void LoadContent(ContentManager theContentManager)
         {
@@ -33,10 +35,12 @@ namespace DinoEscape
             Scale = 1.0f;
             is_projectile = true;   //bullet is a projectile
 
+            /*
             //load audio
             audioEngine = new AudioEngine("Content/gameAudio.xgs");
             waveBank = new WaveBank(audioEngine, "Content/Wave Bank.xwb");
             soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+            */
         }
 
         public void Update(GameTime theGameTime)
@@ -61,7 +65,8 @@ namespace DinoEscape
 
         public void Fire(GamePadState currentGPState, MouseState currentMouseState, Vector2 theStartPos, Vector2 theSpeed, Vector2 theDirection)
         {
-            soundBank.PlayCue("gunfire");
+            //soundBank.PlayCue("gunfire");
+            GameplayScreen.soundController.Play("gunfire");
             Position = theStartPos;     //init bullet position to start position
             start_position = theStartPos;   //init start position
             speed = theSpeed;   //init bullet speed

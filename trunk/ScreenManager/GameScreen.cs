@@ -11,6 +11,7 @@
 #region Using Statements
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 #endregion
 
 namespace DinoEscape
@@ -36,6 +37,19 @@ namespace DinoEscape
     /// </summary>
     public abstract class GameScreen
     {
+        #region Fields
+
+        //Sound stuff!
+        static AudioEngine audioEngine;
+        static WaveBank waveBank;
+        static protected SoundBank soundBank;
+
+        // 3D audio objects
+        AudioEmitter emitter = new AudioEmitter();
+        AudioListener listener = new AudioListener();
+
+        #endregion
+
         #region Properties
 
 
@@ -184,6 +198,15 @@ namespace DinoEscape
 
         #region Initialization
 
+        /// <summary>
+        /// Load audio content in the constructor
+        /// </summary>
+        public GameScreen()
+        {
+            audioEngine = new AudioEngine("Content/gameAudio.xgs");
+            waveBank = new WaveBank(audioEngine, "Content/Wave Bank.xwb");
+            soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+        }
 
         /// <summary>
         /// Load graphics content for the screen.

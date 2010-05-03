@@ -48,16 +48,20 @@ namespace DinoEscape
 
         //Crystal Collection
         int crystals_collected = 0;
-        int crystals_needed = 10;
+        int crystals_needed = 1;
         bool winScreenLoaded = false;
 
         //time interval for crystal generation
         float time = 0;
 
+        /*
         //Sound stuff!
         AudioEngine audioEngine;
         WaveBank waveBank;
         protected SoundBank soundBank;
+        */
+
+        public static SoundControl soundController = new SoundControl();
 
         const int MAX_WINX = 800;
         const int MAX_WINY = 750;
@@ -199,10 +203,12 @@ namespace DinoEscape
             this.RAPTOR_STATS.caughtDistance = 60.0f;
             this.RAPTOR_STATS.hysteresis = 15.0f;
 
+            /*
             // initialize sound manager objects
             audioEngine = new AudioEngine("Content/gameAudio.xgs");
             waveBank = new WaveBank(audioEngine, "Content/Wave Bank.xwb");
             soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+            */
 
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -287,7 +293,8 @@ namespace DinoEscape
             turretReticle.LoadContent(content);
 
             // Start the sound!
-            soundBank.PlayCue("Dino Escape Main Loop");
+            GameplayScreen.soundController.PlayMusic("Dino Escape Main Loop");
+            //GameScreen.soundBank.PlayCue("Dino Escape Main Loop");
 
             smallObstacleLoader.LoadContent(content);
             //smallDestroyedObstacleLoader.LoadContent(content);
@@ -538,8 +545,8 @@ namespace DinoEscape
                         //destroy the soundbank to kill the music
                         soundBank.Dispose();
                         //make new soundbank to play new sound
-                        soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
-                        soundBank.PlayCue("gameover");
+                        //soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+                        //soundBank.PlayCue("gameover");
                         //call function which loads the GameOver screen and then takes you
                         //back to the main menu...
                         GameOver.Load(ScreenManager, null, new BackgroundScreen(), new MainMenuScreen());
@@ -568,9 +575,9 @@ namespace DinoEscape
                         explosion.AddParticles(whereat);
                         //ScreenManager.RemoveScreen(this);
                         this.ScreenState = ScreenState.Hidden;
-                        soundBank.Dispose();
-                        soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
-                        soundBank.PlayCue("gameover");
+                        GameplayScreen.soundController.StopMusic("Dino Escape Main Loop");
+                        //soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+                        GameplayScreen.soundController.Play("gameover");
                         GameOver.Load(ScreenManager, null, new BackgroundScreen(), new MainMenuScreen());
                     }
 
@@ -694,9 +701,9 @@ namespace DinoEscape
                         {
                             obstacleList.Clear(); //clear all obstacles once you reach the goal
                             Player1.Position -= distanceTravelled; //keep the jeep moving forward
-                            soundBank.Dispose();
-                            soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
-                            soundBank.PlayCue("Dino Escape End Theme");
+                            GameplayScreen.soundController.StopMusic("Dino Escape Main Loop");
+                            //soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+                            GameplayScreen.soundController.PlayMusic("Dino Escape End Theme");
                             if (Player1.Position.Y < 240)
                             {
                                 //load the completion screen

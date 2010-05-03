@@ -16,12 +16,12 @@ namespace DinoEscape
         {
             base.scroll_speed = 0;
         }
-
+        /*
         //sound stuff
         AudioEngine audioEngine;
         WaveBank waveBank;
         SoundBank soundBank;
-
+        */
         /// <summary>
         /// Set up the constants
         /// </summary>
@@ -56,17 +56,19 @@ namespace DinoEscape
             //additive blending for fire effects
             spriteBlendMode = SpriteBlendMode.Additive;
 
+            /*
             //load audio
             audioEngine = new AudioEngine("Content/gameAudio.xgs");
             waveBank = new WaveBank(audioEngine, "Content/Wave Bank.xwb");
             soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
-
+            */
             DrawOrder = AdditiveDrawOrder;
         }
 
         protected override void InitializeParticle(Particle p, Vector2 where)
         {
-            soundBank.PlayCue("explosion");
+            //soundBank.PlayCue("explosion");
+            GameplayScreen.soundController.Play("explosion");
             base.InitializeParticle(p, where);
             
             p.Acceleration = -p.Velocity / p.Lifetime;

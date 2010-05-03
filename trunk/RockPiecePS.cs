@@ -17,10 +17,12 @@ namespace DinoEscape
             base.scroll_speed = 300;
         }
 
+        /*
         //sound stuff
         AudioEngine audioEngine;
         WaveBank waveBank;
         SoundBank soundBank;
+        */
 
         /// <summary>
         /// Set up the constants 
@@ -54,10 +56,12 @@ namespace DinoEscape
 
             spriteBlendMode = SpriteBlendMode.AlphaBlend;
 
+            /*
             //load audio
             audioEngine = new AudioEngine("Content/gameAudio.xgs");
             waveBank = new WaveBank(audioEngine, "Content/Wave Bank.xwb");
             soundBank = new SoundBank(audioEngine, "Content/Sound Bank.xsb");
+            */
 
             DrawOrder = AlphaBlendDrawOrder;
         }
@@ -69,7 +73,8 @@ namespace DinoEscape
         /// <param name="where">where the particle should be placed</param>
         protected override void InitializeParticle(Particle p, Vector2 where)
         {
-            soundBank.PlayCue("rock_smash");
+            //soundBank.PlayCue("rock_smash");
+            GameplayScreen.soundController.Play("rock_smash");
             base.InitializeParticle(p, where);
 
             p.Acceleration.Y += GameplayScreen.RandomBetween(10, 50);

@@ -74,6 +74,7 @@ namespace DinoEscape
         /// </summary>
         void ConfirmQuitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
+            GameplayScreen.soundController.StopMusic("Dino Escape Main Loop");
             LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                            new MainMenuScreen());
         }
