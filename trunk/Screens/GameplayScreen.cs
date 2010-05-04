@@ -172,7 +172,7 @@ namespace DinoEscape
             //ScreenManager.Game.Content.RootDirectory = "Content";
 
             // create the particle systems and add them to the components list.
-            explosion = new ExplosionPS(ScreenManager.Game, 2, ScreenManager.SpriteBatch);
+            explosion = new ExplosionPS(ScreenManager.Game, 1, ScreenManager.SpriteBatch);
             ScreenManager.Game.Components.Add(explosion);
 
             explosion_smoke = new ExplosionSmokePS(ScreenManager.Game, 1, ScreenManager.SpriteBatch);
